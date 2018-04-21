@@ -2,7 +2,10 @@
   <div id="app">
     <router-view></router-view>
     <footer>
-      <div>By {{ authors }} - {{ name }} {{ version }} - &copy; {{ new Date().getFullYear() }}</div>
+      <div class="clearfix">
+        <span class="authors">By {{ authors }} </span>
+        <span class="version">{{ name }} {{ version }} - &copy; {{ new Date().getFullYear() }}</span>
+      </div>
     </footer>
   </div>
 </template>
@@ -24,10 +27,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css?family=Ubuntu');
   @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
-  html, body {
-    margin: 0px;
-    padding: 0px;
-  }
+  
   #app {
     font-family: 'Ubuntu', sans-serif;
     max-height: 100vh;
@@ -36,14 +36,23 @@
     padding: 0px;
   }
 
+  .clearfix {
+    clear: both;
+  }
+
   footer {
     position: absolute;
-    left: 0;
-    bottom: 0;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
     padding: 5px 10px;
-    height: 30px; 
+    height: 30px;
     line-height: 30px;
     background: #666;
     color: #fff;
-    width: 100%; }
+    width: 99%;
+    font-size: 13px;
+  }
+  .authors { float: left; }
+  .version { float: right; }
 </style>

@@ -4,13 +4,13 @@ import axios from 'axios'
 const fetchProducts = ({ commit }) => {
   return new Promise((resolve, reject) => {
     axios
-      .get('/products')
+      .get('products')
       .then(response => {
-        commit(types.LOAD_CLIENTS_SUCCESS, response.data)
+        commit(types.LOAD_PRODUCTS_SUCCESS, response.data)
         resolve(response.data)
       })
       .catch(error => {
-        commit(types.LOAD_CLIENTS_ERROR)
+        commit(types.LOAD_PRODUCTS_ERROR)
         reject(error)
       })
   })

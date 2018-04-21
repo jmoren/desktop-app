@@ -3,8 +3,7 @@ import actions from './actions'
 import * as types from '../types'
 
 const state = {
-  list: [],
-  current: {}
+  list: []
 }
 
 const mutations = {

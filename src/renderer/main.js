@@ -11,6 +11,8 @@ import interceptorSetup from './services/interceptors'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
+axios.defaults.baseURL = 'http://localhost:3000/v2'
+
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 Vue.use(ElementUI)

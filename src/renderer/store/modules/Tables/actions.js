@@ -4,7 +4,7 @@ import axios from 'axios'
 const fetchTables = ({ commit }) => {
   return new Promise((resolve, reject) => {
     axios
-      .get('/tables')
+      .get('tables')
       .then(response => {
         commit(types.LOAD_TABLES_SUCCESS, response.data)
         resolve(response.data)
