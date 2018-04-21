@@ -47,7 +47,12 @@
     },
     "linux": {
       "icon": "build/icons"
-    }
+    },
+    "publish": [{
+      "provider": "github",
+      "owner": "jmoren",
+      "repo": "desktop-app"
+    }]
   },
   "dependencies": {
     "axios": "^0.16.1",
