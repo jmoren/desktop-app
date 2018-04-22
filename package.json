@@ -1,6 +1,6 @@
 {
   "name": "barmanager",
-  "version": "3.0.1",
+  "version": "3.0.1-pre",
   "author": "Jorge Moreno & Jairo de Morais",
   "description": "Administracion de locales de comida, bares y restaurantes",
   "license": null,
