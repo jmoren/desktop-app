@@ -1,16 +1,9 @@
 'use strict'
 
-import { app, BrowserWindow, dialog } from 'electron'
+import { app, BrowserWindow, Menu, dialog } from 'electron'
+import manualUpdater from './auto_updater.js'
 
-/**
- * Auto Updater
- *
- * Uncomment the following code below and install `electron-updater` to
- * support auto updating. Code Signing with a valid certificate is required.
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
- */
-
-import { autoUpdater } from 'electron-updater'
+console.log(manualUpdater)
 
 /**
  * Set `__static` path to static files in production
@@ -21,19 +14,57 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
+const menuTemplate = [
+  {
+    label: 'Bar Manager',
+    submenu: [
+      {
+        label: 'About',
+        click: () => {
+          dialog.showMessageBox({
+            type: 'none',
+            buttons: ['Cerrar'],
+            title: 'About',
+            message: 'Bar Manager 3.0',
+            detail: 'Sistema integral para administrar tu restaurante, bar, pizzeria, etc...'
+          })
+        }
+      },
+      {
+        label: 'Actualizaciones',
+        click: manualUpdater.checkForUpdates
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Salir',
+        click: () => {
+          app.quit()
+        }
+      }
+    ]
+  }
+]
+
 function createWindow () {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
     width: 1000
   })
+
+  const menu = Menu.buildFromTemplate(menuTemplate)
+  // menu.append(new MenuItem({label: 'MenuItem1', click() { console.log('item 1 clicked') }}))
+  // menu.append(new MenuItem({type: 'separator'}))
+  // menu.append(new MenuItem({label: 'MenuItem2', type: 'checkbox', checked: true}))
+
+  Menu.setApplicationMenu(menu)
 
   mainWindow.loadURL(winURL)
 
@@ -54,24 +85,4 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
-})
-
-autoUpdater.on('update-downloaded', () => {
-  autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    const dialogOpts = {
-      type: 'info',
-      buttons: ['Restart', 'Later'],
-      title: 'Application Update',
-      message: process.platform === 'win32' ? releaseNotes : releaseName,
-      detail: 'A new version has been downloaded. Restart the application to apply the updates.'
-    }
-
-    dialog.showMessageBox(dialogOpts, (response) => {
-      if (response === 0) autoUpdater.quitAndInstall()
-    })
-  })
-})
-
-app.on('ready', () => {
-  if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })
