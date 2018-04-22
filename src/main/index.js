@@ -90,7 +90,6 @@ function createWindow () {
 app.on('ready', createWindow)
 
 ipcMain.on('install-updates', (event, args) => {
-  console.log('event install updates', args)
   if (process.env.NODE_ENV === 'development') {
     app.quit()
   } else {
