@@ -34,10 +34,10 @@
 </script>
 
 <style scoped>
-  .system-info { margin-top: 80px; }
+  .system-info { margin-top: 50px; }
   .title {
     color: #888;
-    font-size: 20px;
+    font-size: 13px;
     margin-bottom: 20px;
   }
 
@@ -46,8 +46,9 @@
   .item {
     margin-bottom: 5px;
     border-bottom: solid 1px #f1f1f1;
-    line-height: 50px;
-    height: 50px;
+    line-height: 40px;
+    height: 40px;
+    font-size: 13px;
   }
 
   .item .name {
@@ -60,6 +61,4 @@
     font-weight: bold;
     text-align: right;
   }
-
-  .authors { position: absolute; left: 20px; bottom: 10px; height: 30px; line-height: 30px; }
 </style>

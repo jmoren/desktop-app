@@ -2,23 +2,58 @@
   <div id="app">
     <router-view></router-view>
     <footer>
-      <div class="clearfix">
-        <span class="authors">By {{ authors }} </span>
-        <span class="version">{{ name }} {{ version }} - &copy; {{ new Date().getFullYear() }}</span>
+      <span class="authors">By {{ authors }} </span>
+      <div class="version">
+        <span class="update-indicator" @click="confirmUpdate = true">
+          <span class="message-icon" style="color: #F56C6C"><font-awesome-icon icon="exclamation-circle"></font-awesome-icon></span>
+          <span class="message">{{ message }}</span>
+        </span>
+        <span class="info">{{ name }} {{ version }} &copy; {{ new Date().getFullYear() }}</span>
       </div>
     </footer>
+
+    <el-dialog
+      title="Tips"
+      :visible.sync="confirmUpdate"
+      width="30%">
+      <span>Cerrar la aplicacion y actualizar?</span>
+      <div slot="footer" style="text-align: right; margin: 0">
+        <el-button size="mini" type="text" @click="confirmUpdate = false">cancel</el-button>
+        <el-button type="primary" size="mini" @click="sendMessageUpdate()">confirm</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import { ipcRenderer } from 'electron'
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
   const appPackage = require('../../package.json')
+
   export default {
     name: 'barmanager',
+    components: { FontAwesomeIcon },
     data () {
       return {
         authors: appPackage.author,
         name: appPackage.name,
-        version: appPackage.version
+        version: appPackage.version,
+        confirmUpdate: false,
+        message: ''
+      }
+    },
+    mounted () {
+      console.log('mounted app')
+      ipcRenderer.on('message', (event, message) => {
+        console.log(message)
+        this.event = message.event
+        this.message = message.message
+      })
+    },
+    methods: {
+      sendMessageUpdate () {
+        ipcRenderer.send('install-updates', {})
+        console.log('send message to update')
       }
     }
   }
@@ -26,33 +61,32 @@
 
 <style>
   @import url('https://fonts.googleapis.com/css?family=Ubuntu');
-  @import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons');
-  
-  #app {
+
+  html, body {
+    height: 100% !important;
+    width: 100% !important;
+    overflow-x: hidden;
+    background: #E4E7ED;
     font-family: 'Ubuntu', sans-serif;
-    max-height: 100vh;
-    min-height:  100vh;
-    margin: 0px;
-    padding: 0px;
+    padding: 0px !important;
+    margin: 0px !important;
   }
 
-  .clearfix {
-    clear: both;
+  #wrapper {
+    height: 100vh;
   }
-
   footer {
     position: absolute;
-    left: 0px;
-    right: 0px;
     bottom: 0px;
-    padding: 5px 10px;
-    height: 30px;
-    line-height: 30px;
-    background: #666;
+    height: 20px;
+    line-height: 20px;
+    background: #333;
     color: #fff;
-    width: 99%;
-    font-size: 13px;
+    font-size: 10px;
+    padding: 3px 5px;
+    width: 100%;
   }
-  .authors { float: left; }
-  .version { float: right; }
+  footer .version { float: right; margin-right: 20px;}
+  footer .update-indicator { margin-right: 10px; }
+  footer .update-indicator:hover .message { border-bottom: solid 1px #f1f1f1; cursor: pointer;}
 </style>

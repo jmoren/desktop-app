@@ -1,9 +1,7 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, dialog } from 'electron'
-import manualUpdater from './auto_updater.js'
-
-console.log(manualUpdater)
+import { app, BrowserWindow, Menu, dialog, ipcMain } from 'electron'
+import manualUpdater from './manual_updater.js'
 
 /**
  * Set `__static` path to static files in production
@@ -14,6 +12,7 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let menu
 
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -36,8 +35,10 @@ const menuTemplate = [
         }
       },
       {
-        label: 'Actualizaciones',
-        click: manualUpdater.checkForUpdates
+        label: 'Check Updates',
+        click: () => {
+          manualUpdater.checkForUpdates(mainWindow)
+        }
       },
       {
         type: 'separator'
@@ -49,24 +50,37 @@ const menuTemplate = [
         }
       }
     ]
+  },
+  {
+    label: 'Dev Tools',
+    submenu: [
+      {
+        label: 'Open Dev tools',
+        click: () => {
+          mainWindow.webContents.openDevTools()
+        }
+      }
+    ]
   }
 ]
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    height: 563,
-    useContentSize: true,
-    width: 1000
+    backgroundColor: '#E4E7ED'
   })
 
-  const menu = Menu.buildFromTemplate(menuTemplate)
-  // menu.append(new MenuItem({label: 'MenuItem1', click() { console.log('item 1 clicked') }}))
-  // menu.append(new MenuItem({type: 'separator'}))
-  // menu.append(new MenuItem({label: 'MenuItem2', type: 'checkbox', checked: true}))
-
+  menu = Menu.buildFromTemplate(menuTemplate)
   Menu.setApplicationMenu(menu)
 
   mainWindow.loadURL(winURL)
+
+  if (process.env.NODE_ENV === 'development') {
+    mainWindow.webContents.openDevTools()
+  }
+
+  mainWindow.webContents.on('dom-ready', () => {
+    manualUpdater.checkForUpdates(mainWindow)
+  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
@@ -74,6 +88,15 @@ function createWindow () {
 }
 
 app.on('ready', createWindow)
+
+ipcMain.on('install-updates', (event, args) => {
+  console.log('event install updates', args)
+  if (process.env.NODE_ENV === 'development') {
+    app.quit()
+  } else {
+    manualUpdater.confirm()
+  }
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

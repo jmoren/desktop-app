@@ -5,7 +5,9 @@ export default function setup () {
   axios.interceptors.request.use(
     function (config) {
       const token = localStorage.getItem('@token_id')
-      if (token) config.headers['Authorization'] = `Bearer ${token}`
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`
+      }
       config.headers['Accept'] = 'application/json'
       config.headers['Content-Type'] = 'application/json'
       config.headers['Access-Control-Allow-Origin'] = '*'

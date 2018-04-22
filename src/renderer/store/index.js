@@ -7,11 +7,13 @@ import tickets from './modules/tickets'
 import products from './modules/products'
 import shared from './modules/shared'
 import ui from './modules/ui'
+import auth from './modules/auth'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
+    auth,
     clients,
     tickets,
     tables,

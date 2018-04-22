@@ -5,9 +5,10 @@ import App from './App'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-
 import interceptorSetup from './services/interceptors'
+
+import 'element-ui/lib/theme-chalk/index.css'
+import '@fortawesome/fontawesome-free-solid'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 
@@ -18,6 +19,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 
 interceptorSetup()
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
