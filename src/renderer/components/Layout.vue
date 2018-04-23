@@ -2,25 +2,31 @@
   <el-row :gutter="0">
     <el-col :span="1" class="left-navbar">
       <div class="button-item">
-        <el-button type="primary" size="small" circle>
-          <icon icon="plus"></icon>
+        <el-button style="background: #C70039; color: #fff; border-color: #C70039" size="small" circle>
+          <icon icon="user"></icon>
         </el-button>
-        <div class="title">Cliente</div>
+        <div class="title">Clientes</div>
       </div>
       <div class="button-item">
-        <el-button type="primary" size="small" circle>
-          <icon icon="plus"></icon>
+        <el-button style="background: #C70039; color: #fff; border-color: #C70039" size="small" circle>
+          <icon icon="utensils"></icon>
         </el-button>
-        <div class="title">Mesa</div>
+        <div class="title">Mesas</div>
       </div>
       <div class="button-item">
-        <el-button type="primary" size="small" circle>
-          <icon icon="plus"></icon>
+        <el-button style="background: #C70039; color: #fff; border-color: #C70039" size="small" circle>
+          <icon icon="truck"></icon>
         </el-button>
-        <div class="title">Delivery</div>
+        <div class="title">Deliveries</div>
+      </div>
+      <div class="button-item">
+        <el-button style="background: #C70039; color: #fff; border-color: #C70039" size="small" circle>
+          <icon icon="podcast"></icon>
+        </el-button>
+        <div class="title">Cta. Corriente</div>
       </div>
       <div class="button-item logout">
-        <el-button type="danger" size="small" @click="doLogout()" circle>
+        <el-button style="background: red; border-color: red; color: #fff;" size="small" @click="doLogout()" circle>
           <icon icon="sign-out-alt"></icon>
         </el-button>
       </div>
@@ -93,14 +99,14 @@ export default {
     position: relative;
     height: 100vh;
     background: #f1f1f1;
-    border-right: solid 2px #ddd;
+    border-right: solid 2px #d4d4d4;
     text-align: center;
     padding-top: 40px;
     color: #333;
   }
-  .left-navbar .button-item { height: 50px; border-bottom: solid 1px #ddd; padding: 10px 0px; }
-  .left-navbar .button-item .title { font-size: 12px; margin-top: 5px; }
+  .left-navbar .button-item { position: relative; height: 80px; border-bottom: solid 1px #d4d4d4; padding-top: 20px; }
+  .left-navbar .button-item .title { font-size: 12px; margin-top: 10px; }
   .left-navbar .button-item:first-child { margin-top: 30px; border-top: solid 1px #ddd; }
-  .left-navbar .button-item.logout { position: absolute; bottom: 15px; left: 15px; border-bottom: none; }
+  .left-navbar .button-item.logout { position: absolute; bottom: 5px; left: 15px; border-bottom: none; }
   .main-content { height: 100vh; padding: 0px; margin: 0px; background: #fff; }
 </style>

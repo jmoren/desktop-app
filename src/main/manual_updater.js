@@ -25,7 +25,7 @@ autoUpdater.on('update-available', (info) => {
   sendStatusToWindow('available', 'Update available.')
 })
 autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('not-available', 'Update not available.')
+  sendStatusToWindow('notAvailable', 'Update not available.')
 })
 autoUpdater.on('error', (err) => {
   sendStatusToWindow('error', 'Error in auto-updater. ' + err)
@@ -47,7 +47,6 @@ function confirm () {
 
 function checkForUpdates (currentWindow) {
   win = currentWindow
-  sendStatusToWindow('Connecting to server...')
   if (process.env.NODE_ENV === 'development') {
     sendStatusToWindow('dev', 'Dev mode')
   } else {

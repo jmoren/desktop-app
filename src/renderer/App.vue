@@ -4,10 +4,14 @@
     <footer>
       <span class="authors">By {{ authors }} </span>
       <div class="version">
-        <span class="update-indicator" @click="confirmUpdate = true">
-          <span class="message-icon" style="color: #F56C6C"><font-awesome-icon icon="exclamation-circle"></font-awesome-icon></span>
-          <span class="message">{{ message }}</span>
-        </span>
+        <a class="update-indicator" @click="confirmUpdateModal()">
+          <span class="message-icon" :class="{'success': upToDate, 'danger': outdated, 'info': downloading }">
+            <font-awesome-icon icon="check-circle" v-if="upToDate"></font-awesome-icon>
+            <font-awesome-icon icon="exclamation-circle" pulse v-if="outdated"></font-awesome-icon>
+            <font-awesome-icon icon="sync" spin v-if="downloading"></font-awesome-icon>
+          </span>
+          <span class="message">{{ textMsg }}</span>
+        </a>
         <span class="info">{{ name }} {{ version }} &copy; {{ new Date().getFullYear() }}</span>
       </div>
     </footer>
@@ -39,21 +43,34 @@
         name: appPackage.name,
         version: appPackage.version,
         confirmUpdate: false,
-        message: ''
+        eventMsg: '',
+        textMsg: ''
+      }
+    },
+    computed: {
+      upToDate () {
+        return (this.eventMsg === 'notAvailable' || this.eventMsg === 'dev')
+      },
+      outdated () {
+        return (this.eventMsg === 'available' || this.eventMsg === 'downloaded')
+      },
+      downloading () {
+        return (this.eventMsg === 'downloading' || this.eventMsg === 'checking')
       }
     },
     mounted () {
-      console.log('mounted app')
       ipcRenderer.on('message', (event, message) => {
-        console.log(message)
-        this.event = message.event
-        this.message = message.message
+        this.eventMsg = message.event
+        this.textMsg = message.message
       })
     },
     methods: {
+      confirmUpdateModal () {
+        if (this.upToDate || this.downloading) { return false }
+        this.confirmUpdate = true
+      },
       sendMessageUpdate () {
         ipcRenderer.send('install-updates', {})
-        console.log('send message to update')
       }
     }
   }
@@ -85,8 +102,12 @@
     font-size: 10px;
     padding: 3px 5px;
     width: 100%;
+    z-index: 100001;
   }
   footer .version { float: right; margin-right: 20px;}
-  footer .update-indicator { margin-right: 10px; }
+  footer .update-indicator .message { margin: 0px 10px 0px 5px; }
+  footer .update-indicator .message-icon.success { color: #67C23A !important; }
+  footer .update-indicator .message-icon.danger { color: #F56C6C !important; }
+  footer .update-indicator .message-icon.info { color: #909399 !important; }
   footer .update-indicator:hover .message { border-bottom: solid 1px #f1f1f1; cursor: pointer;}
 </style>
