@@ -32,8 +32,8 @@ autoUpdater.on('error', (err) => {
 })
 
 autoUpdater.on('download-progress', (progressObj) => {
-  let logMessage = 'Downloaded ' + progressObj.percent + '%'
-  logMessage = logMessage + ' (' + progressObj.transferred + '/' + progressObj.total + ')'
+  let logMessage = 'Downloaded ' + Math.floor(progressObj.percent) + '%'
+  logMessage = logMessage + ' (' + Math.floor(progressObj.transferred) + '/' + Math.floor(progressObj.total) + ')'
   sendStatusToWindow('downloading', logMessage)
 })
 
