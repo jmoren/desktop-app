@@ -20,6 +20,15 @@ Vue.use(ElementUI)
 
 interceptorSetup()
 
+Vue.filter('capitalize', function (name) {
+  if (!name) return ''
+  let values = name
+    .toString()
+    .replace(/_/g, ' ')
+    .split(' ')
+  return values.map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' ')
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

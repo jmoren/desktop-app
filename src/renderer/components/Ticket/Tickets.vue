@@ -8,14 +8,14 @@
           <el-button type="primary">Cerrar</el-button>
           <el-button type="primary">Cancelar</el-button>
         </el-button-group>
-        <el-button type="info" :loading="loading" @click="reloadTables()">
+        <el-button type="info" :loading="loading" @click="loadTickets()">
           <i class="el-icon-refresh"></i>
         </el-button>
       </div>
     </page-header>
     <page-content>
       <div slot="content">
-        Aca va el ticket
+        Aca van los tickets
       </div>
     </page-content>
   </div>
@@ -36,18 +36,15 @@
     data () {
       return {
         loading: false,
-        ticket: {}
+        tickets: {}
       }
     },
-    watch: {
-      '$route': 'loadTicket'
-    },
     created () {
-      this.loadTicket()
+      this.loadTickets()
     },
     methods: {
-      loadTicket () {
-        console.log('load ticket', this.$route.params.id)
+      loadTickets () {
+        console.log('load tickets')
       }
     }
   }

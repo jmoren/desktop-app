@@ -5,7 +5,16 @@
       <client-search ref="searchForm"></client-search>
     </transition>
     <footer>
-      <span class="authors">By {{ authors }} </span>
+      <span class="path">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item :to="{ name: 'tables' }">
+            Inicio
+          </el-breadcrumb-item>
+          <el-breadcrumb-item v-for="(path, index) in currentPath" :key="index" :to="{ name: path }">
+            {{ path | capitalize }}
+          </el-breadcrumb-item>
+        </el-breadcrumb>
+      </span>
       <div class="version">
         <a class="update-indicator" @click="confirmUpdateModal()">
           <span class="message-icon" :class="{'success': upToDate, 'danger': outdated, 'info': downloading }">
@@ -59,11 +68,14 @@
       },
       downloading () {
         return (this.eventMsg === 'downloading' || this.eventMsg === 'checking')
+      },
+      currentPath () {
+        let paths = this.$route.path.split('/')
+        paths.shift()
+        return paths
       }
     },
     created () {
-      console.log(this.$refs)
-
       ipcRenderer.send('ready-to-messages', {})
 
       ipcRenderer.on('message', (event, message) => {
@@ -117,7 +129,6 @@
   .fade-leave-to {
     opacity: 0;
   }
-
   footer {
     position: absolute;
     bottom: 0px;
@@ -125,12 +136,15 @@
     line-height: 30px;
     background: #333;
     color: #fff;
-    font-size: 10px;
+    font-size: 12px;
     padding: 3px 5px;
     width: 100%;
     z-index: 100001;
   }
   footer .version { float: right; margin-right: 20px;}
+  footer .path .el-breadcrumb { float: left; line-height: 30px; margin: 0px 5px 0px 10px; font-size: 12px;} 
+  footer .path .el-breadcrumb a, 
+  footer .path .el-breadcrumb .el-breadcrumb__inner.is-link { color: #f1f1f1 !important; }
   footer .update-indicator .message { margin: 0px 10px 0px 5px; }
   footer .update-indicator .message-icon.success { color: #67C23A !important; }
   footer .update-indicator .message-icon.danger { color: #F56C6C !important; }

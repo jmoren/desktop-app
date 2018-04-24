@@ -18,8 +18,38 @@
             <el-col :span="4" v-for="(table, index) in tables" :key="index" class="table">
               <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none;">
                 <div :class="table.status">
-                  <span class="icon"><font-awesome-icon icon="utensils" size="2x"></font-awesome-icon></span>
-                  <div class="name">{{ table.description }}</div>
+                  <el-row :gutter="5" >
+                    <el-col :span="8">
+                      <span v-if="table.current.id">
+                        <router-link :to="{ name: 'ticket', params: { id: table.current.id }}">
+                          <span class="icon"><font-awesome-icon icon="utensils" size="4x"></font-awesome-icon></span>
+                        </router-link>
+                      </span>
+                      <span v-else>
+                        <a @click="openTable(table)">
+                          <span class="icon"><font-awesome-icon icon="utensils" size="4x"></font-awesome-icon></span>
+                        </a>
+                      </span>
+                    </el-col>
+                    <el-col :span="16" class="with-ticket" v-if="table.current.id">
+                      <el-row :gutter="5">
+                        <div style="font-size: 13px">
+                          <i class="el-icon-bell"></i> 
+                          Ticket <b>{{ table.current.number }}</b>
+                        </div>
+                        <div style="font-size: 13px; margin-top: 5px" v-if="table.current.client.name">
+                          <i class="el-icon-circle-check"></i> 
+                          {{ table.current.client.name }}
+                        </div>
+                        <div style="font-size: 13px; margin-top: 5px">
+                          <a href=""><i class="el-icon-circle-close-outline"></i> Cerrar</a>
+                        </div>
+                      </el-row>
+                    </el-col>
+                  </el-row>
+                  <el-row :gutter="5" style="margin-top: 10px;">
+                    <el-col :span="24"><div class="name">{{ table.description }}</div></el-col>
+                  </el-row>
                 </div>
               </el-card>
             </el-col>
@@ -89,17 +119,20 @@ export default {
     padding: 0px;
     margin: 0px;
   }
-  .table-list .table .closed {
+  .table-list .table .closed,
+  .table-list .table .closed a {
     color: #C70039;
   }
 
-  .table-list .table .open {
+  .table-list .table .open,
+  .table-list .table .open a {
     color: #333;
   }
 
   .table-list .table {
-    text-align: center;
+    text-align: left;
   }
+  .table-list .table .with-ticket a { color: #C70039; text-decoration: none;}
   .table-list .table .name {
     margin: 5px 0px;
     padding: 0px;

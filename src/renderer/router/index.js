@@ -4,6 +4,9 @@ import Router from 'vue-router'
 import Layout from '@/components/Layout'
 import Tables from '@/components/Table/Tables'
 import Clients from '@/components/Client/Clients'
+import Client from '@/components/Client/Client'
+import Ticket from '@/components/Ticket/Ticket'
+import Tickets from '@/components/Ticket/Tickets'
 
 Vue.use(Router)
 
@@ -14,13 +17,28 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'Tables',
+        name: 'tables',
         component: Tables
       },
       {
         path: 'clients',
-        name: 'Clients',
+        name: 'clients',
         component: Clients
+      },
+      {
+        path: 'clients/:id',
+        name: 'client',
+        component: Client
+      },
+      {
+        path: 'tickets/:id',
+        name: 'ticket',
+        component: Ticket
+      },
+      {
+        path: 'tickets',
+        name: 'tickets',
+        component: Tickets
       }
     ]
   },

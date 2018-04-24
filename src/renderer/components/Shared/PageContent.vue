@@ -10,8 +10,8 @@
 </script>
 
 <style>
-  .main-content-view {
-    padding: 0px;
+  .content {
+    padding: 71px 0px 35px 0px;
     margin: 0px;
   }
 </style>

@@ -33,6 +33,9 @@
   .main-nav-bar {
     background: #f1f1f1;
     padding: 10px;
+    position: fixed;
+    width: 99%;
+    z-index: 10000;
     margin: 0px;
     height: 50px;
     line-height: 50px;
@@ -56,5 +59,6 @@
 
   .main-nav-bar .controls {
     float: right;
+    margin-right: 5px;
   }
 </style>

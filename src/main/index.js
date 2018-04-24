@@ -22,28 +22,37 @@ const menuTemplate = [
         label: 'Mesas',
         accelerator: 'CmdOrCtrl+M',
         click: () => {
-          openPage('Tables')
+          openPage('tables')
         }
+      },
+      {
+        type: 'separator'
       },
       {
         label: 'Clientes',
         accelerator: 'CmdOrCtrl+C',
         click: () => {
-          openPage('Clients')
+          openPage('clients')
         }
+      },
+      {
+        type: 'separator'
       },
       {
         label: 'Deliveries',
         accelerator: 'CmdOrCtrl+D',
         click: () => {
-          openPage('Deliveries')
+          openPage('deliveries')
         }
+      },
+      {
+        type: 'separator'
       },
       {
         label: 'Tickets',
         accelerator: 'CmdOrCtrl+T',
         click: () => {
-          openPage('Tickets')
+          openPage('tickets')
         }
       }
     ]
@@ -71,11 +80,17 @@ const menuTemplate = [
         }
       },
       {
+        type: 'separator'
+      },
+      {
         label: 'Reportes',
-        accelerator: 'CmdOrCtrl+R',
+        accelerator: 'CmdOrCtrl+T',
         click: () => {
           openPage('Reportes')
         }
+      },
+      {
+        type: 'separator'
       },
       {
         label: 'Productos',
@@ -110,6 +125,9 @@ const menuTemplate = [
             detail: 'Sistema integral para administrar tu restaurante, bar, pizzeria, etc...'
           })
         }
+      },
+      {
+        type: 'separator'
       },
       {
         label: 'Actualizaciones',
@@ -162,9 +180,9 @@ function createWindow () {
 function openPage (page) {
   if (page === 'search') {
     mainWindow.webContents.send('open-search')
-  } else if (page === 'Clients') {
+  } else if (page === 'clients') {
     mainWindow.webContents.send('open-page', page)
-  } else if (page === 'Tables') {
+  } else if (page === 'tables') {
     mainWindow.webContents.send('open-page', page)
   } else {
     console.log(`Open page: ${page}`)
