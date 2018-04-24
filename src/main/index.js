@@ -1,7 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow, Menu, dialog, ipcMain } from 'electron'
-import manualUpdater from './manual_updater.js'
+import manualUpdater from './manual_updater'
 
 /**
  * Set `__static` path to static files in production
@@ -14,13 +14,90 @@ if (process.env.NODE_ENV !== 'development') {
 let mainWindow
 let menu
 
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
-
 const menuTemplate = [
   {
-    label: 'Bar Manager',
+    label: 'BarManager',
+    submenu: [
+      {
+        label: 'Mesas',
+        accelerator: 'CmdOrCtrl+M',
+        click: () => {
+          openPage('Tables')
+        }
+      },
+      {
+        label: 'Clientes',
+        accelerator: 'CmdOrCtrl+C',
+        click: () => {
+          openPage('Clients')
+        }
+      },
+      {
+        label: 'Deliveries',
+        accelerator: 'CmdOrCtrl+D',
+        click: () => {
+          openPage('Deliveries')
+        }
+      },
+      {
+        label: 'Tickets',
+        accelerator: 'CmdOrCtrl+T',
+        click: () => {
+          openPage('Tickets')
+        }
+      }
+    ]
+  },
+  {
+    label: 'Buscar',
+    submenu: [
+      {
+        label: 'Clientes',
+        accelerator: 'CmdOrCtrl+L',
+        click: () => {
+          openPage('search')
+        }
+      }
+    ]
+  },
+  {
+    label: 'Administracion',
+    submenu: [
+      {
+        label: 'Usuarios',
+        accelerator: 'CmdOrCtrl+U',
+        click: () => {
+          openPage('Usuarios')
+        }
+      },
+      {
+        label: 'Reportes',
+        accelerator: 'CmdOrCtrl+R',
+        click: () => {
+          openPage('Reportes')
+        }
+      },
+      {
+        label: 'Productos',
+        accelerator: 'CmdOrCtrl+P',
+        click: () => {
+          openPage('Productos')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Configuaracion',
+        accelerator: 'CmdOrCtrl+F',
+        click: () => {
+          openPage('Configuracion')
+        }
+      }
+    ]
+  },
+  {
+    label: 'Info',
     submenu: [
       {
         label: 'About',
@@ -35,7 +112,7 @@ const menuTemplate = [
         }
       },
       {
-        label: 'Check Updates',
+        label: 'Actualizaciones',
         click: () => {
           manualUpdater.checkForUpdates(mainWindow)
         }
@@ -45,56 +122,72 @@ const menuTemplate = [
       },
       {
         label: 'Salir',
-        click: () => {
-          app.quit()
-        }
+        role: 'quit'
       }
     ]
   },
   {
-    label: 'Dev Tools',
+    label: 'Dev',
     submenu: [
       {
-        label: 'Open Dev tools',
-        click: () => {
-          mainWindow.webContents.openDevTools()
-        }
+        label: 'DevTools',
+        role: 'toggledevtools'
       }
     ]
   }
 ]
 
+const winURL = process.env.NODE_ENV === 'development'
+  ? `http://localhost:9080`
+  : `file://${__dirname}/index.html`
+
 function createWindow () {
   mainWindow = new BrowserWindow({
-    backgroundColor: '#E4E7ED'
+    backgroundColor: '#E4E7ED',
+    width: 1024,
+    height: 800
   })
 
+  // Add menu
   menu = Menu.buildFromTemplate(menuTemplate)
   Menu.setApplicationMenu(menu)
 
   mainWindow.loadURL(winURL)
-
-  if (process.env.NODE_ENV === 'development') {
-    mainWindow.webContents.openDevTools()
-  }
-
-  mainWindow.webContents.on('dom-ready', () => {
-    manualUpdater.checkForUpdates(mainWindow)
-  })
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
 }
 
-app.on('ready', createWindow)
-
-ipcMain.on('install-updates', (event, args) => {
-  if (process.env.NODE_ENV === 'development') {
-    app.quit()
+function openPage (page) {
+  if (page === 'search') {
+    mainWindow.webContents.send('open-search')
+  } else if (page === 'Clients') {
+    mainWindow.webContents.send('open-page', page)
+  } else if (page === 'Tables') {
+    mainWindow.webContents.send('open-page', page)
   } else {
-    manualUpdater.confirm()
+    console.log(`Open page: ${page}`)
   }
+}
+
+function startListenerUpdater () {
+  ipcMain.on('ready-to-messages', () => {
+    manualUpdater.checkForUpdates(mainWindow)
+  })
+
+  ipcMain.on('install-updates', (event, args) => {
+    if (process.env.NODE_ENV === 'development') {
+      app.quit()
+    } else {
+      manualUpdater.confirm()
+    }
+  })
+}
+
+app.on('ready', () => {
+  startListenerUpdater()
+  createWindow()
 })
 
 app.on('window-all-closed', () => {

@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="main-content-view">
-    <div class="main-nav-bar">
-      <span class="title">MESAS</span>
-      <div style="float: right">
+    <page-header>
+      <div slot="title" >MESAS</div>
+      <div slot="controls">
         <el-button-group>
           <el-button type="primary" @click="filterTables('open')">Abiertas</el-button>
           <el-button type="primary" @click="filterTables('closed')">Cerradas</el-button>
@@ -10,32 +10,36 @@
         </el-button-group>
         <el-button type="info" :loading="loading" @click="reloadTables()">Recargar</el-button>
       </div>
-    </div>
-    <div class="content">
-      <div class="table-list" v-loading="loading">
-        <el-row>
-          <el-col :span="4" v-for="(table, index) in tables" :key="index" class="table">
-            <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none;">
-              <div :class="table.status">
-                <span class="icon"><font-awesome-icon icon="utensils" size="2x"></font-awesome-icon></span>
-                <div class="name">{{ table.description }}</div>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
+    </page-header>
+    <page-content>
+      <div slot="content">
+        <div class="table-list" v-loading="loading">
+          <el-row>
+            <el-col :span="4" v-for="(table, index) in tables" :key="index" class="table">
+              <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none;">
+                <div :class="table.status">
+                  <span class="icon"><font-awesome-icon icon="utensils" size="2x"></font-awesome-icon></span>
+                  <div class="name">{{ table.description }}</div>
+                </div>
+              </el-card>
+            </el-col>
+          </el-row>
+        </div>
       </div>
-    </div>
+    </page-content>
   </div>
 </template>
 
 <script>
+import PageHeader from '@/components/Shared/PageHeader'
+import PageContent from '@/components/Shared/PageContent'
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { createNamespacedHelpers as namespace } from 'vuex'
 const { mapGetters: tablesGetters, mapActions: tablesActions } = namespace('tables')
 
 export default {
   name: 'tables',
-  components: { FontAwesomeIcon },
+  components: { PageHeader, PageContent, FontAwesomeIcon },
   data () {
     return {
       loading: false,
@@ -79,23 +83,6 @@ export default {
 </script>
 
 <style lang="css">
-.main-content-view {
-  padding: 0px;
-  margin: 0px;
-}
-  .main-nav-bar {
-    background: #f1f1f1;
-    padding: 10px;
-    margin: 0px;
-    height: 50px;
-    line-height: 50px;
-    border-bottom: solid 1px #d4d4d4;
-  }
-  .main-nav-bar .title {
-    color: #333;
-    font-weight: bold;
-    font-size: 25px;
-  }
   .table-list {
     overflow: scroll;
     height: 850px;

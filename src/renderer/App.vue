@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <transition name="fade" mode="out-in"
+      <router-view/>
+      <client-search ref="searchForm"></client-search>
+    </transition>
     <footer>
       <span class="authors">By {{ authors }} </span>
       <div class="version">
@@ -15,7 +18,6 @@
         <span class="info">{{ name }} {{ version }} &copy; {{ new Date().getFullYear() }}</span>
       </div>
     </footer>
-
     <el-dialog
       title="Tips"
       :visible.sync="confirmUpdate"
@@ -32,19 +34,20 @@
 <script>
   import { ipcRenderer } from 'electron'
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+  import ClientSearch from '@/components/Shared/ClientSearch'
   const appPackage = require('../../package.json')
 
   export default {
     name: 'barmanager',
-    components: { FontAwesomeIcon },
+    components: { FontAwesomeIcon, ClientSearch },
     data () {
       return {
         authors: appPackage.author,
         name: appPackage.name,
         version: appPackage.version,
         confirmUpdate: false,
-        eventMsg: '',
-        textMsg: ''
+        eventMsg: 'wait',
+        textMsg: 'wait'
       }
     },
     computed: {
@@ -58,10 +61,25 @@
         return (this.eventMsg === 'downloading' || this.eventMsg === 'checking')
       }
     },
-    mounted () {
+    created () {
+      console.log(this.$refs)
+
+      ipcRenderer.send('ready-to-messages', {})
+
       ipcRenderer.on('message', (event, message) => {
+        console.log(message)
         this.eventMsg = message.event
         this.textMsg = message.message
+      })
+
+      ipcRenderer.on('open-page', (event, page) => {
+        this.$router.push({ name: page })
+      })
+
+      ipcRenderer.on('open-search', (event) => {
+        this.$nextTick(() => {
+          this.$refs.searchForm.open()
+        })
       })
     },
     methods: {
@@ -89,14 +107,22 @@
     margin: 0px !important;
   }
 
-  #wrapper {
-    height: 100vh;
+  .fade-leave-active {
+    opacity: 0;
   }
+  .fade-enter-active {
+    transition: opacity 0.1s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
   footer {
     position: absolute;
     bottom: 0px;
-    height: 20px;
-    line-height: 20px;
+    height: 30px;
+    line-height: 30px;
     background: #333;
     color: #fff;
     font-size: 10px;

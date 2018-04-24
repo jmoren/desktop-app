@@ -28,16 +28,19 @@
       "dist/electron/**/*"
     ],
     "dmg": {
-      "contents": [{
-        "x": 410,
-        "y": 150,
-        "type": "link",
-        "path": "/Applications"
-      }, {
-        "x": 130,
-        "y": 150,
-        "type": "file"
-      }]
+      "contents": [
+        {
+          "x": 410,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 130,
+          "y": 150,
+          "type": "file"
+        }
+      ]
     },
     "mac": {
       "icon": "build/icons/icon.icns"
@@ -48,11 +51,13 @@
     "linux": {
       "icon": "build/icons"
     },
-    "publish": [{
-      "provider": "github",
-      "owner": "jmoren",
-      "repo": "desktop-app"
-    }]
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "jmoren",
+        "repo": "desktop-app"
+      }
+    ]
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.5",
