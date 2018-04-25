@@ -16,7 +16,7 @@
         <div class="table-list" v-loading="loading">
           <el-row>
             <el-col :span="4" v-for="(table, index) in tables" :key="index" class="table">
-              <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none;">
+              <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none; height: 129px;">
                 <div :class="table.status">
                   <el-row :gutter="5" >
                     <el-col :span="8">
@@ -131,6 +131,8 @@ export default {
 
   .table-list .table {
     text-align: left;
+    min-height: 130px;
+    max-height: 130px;
   }
   .table-list .table .with-ticket a { color: #C70039; text-decoration: none;}
   .table-list .table .name {

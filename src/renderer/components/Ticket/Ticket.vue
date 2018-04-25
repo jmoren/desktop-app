@@ -1,12 +1,10 @@
 <template>
   <div v-loading="loading">
     <page-header>
-      <div slot="title" >Ticket</div>
+      <div slot="title" >Ticket {{ ticket.number }}</div>
       <div slot="controls">
         <el-button-group>
-          <el-button type="primary">Imprimir</el-button>
-          <el-button type="primary">Cerrar</el-button>
-          <el-button type="primary">Cancelar</el-button>
+          <el-button type="primary">Nuevo Pago</el-button>
         </el-button-group>
         <el-button type="info" :loading="loading" @click="reloadTables()">
           <i class="el-icon-refresh"></i>
@@ -15,17 +13,21 @@
     </page-header>
     <page-content>
       <div slot="content">
-        Aca va el ticket
+        {{ ticket }}
       </div>
     </page-content>
   </div>
 </template>
 
 <script>
+  import { ipcRenderer } from 'electron'
   import PageHeader from '@/components/Shared/PageHeader'
   import PageContent from '@/components/Shared/PageContent'
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-  
+  import { createNamespacedHelpers as namespace } from 'vuex'
+  const { mapActions: ticketsActions } = namespace('tickets')
+  const { mapGetters: productsGetters } = namespace('shared')
+
   export default {
     name: 'client',
     components: {
@@ -39,15 +41,31 @@
         ticket: {}
       }
     },
-    watch: {
-      '$route': 'loadTicket'
+    computed: {
+      ...productsGetters(['productList', 'categoryList'])
+    },
+    beforeDestroy () {
+      ipcRenderer.send('toggle-ticket-menu', {})
+      ipcRenderer.removeAllListeners('ticket-action')
+    },
+    mounted () {
+      ipcRenderer.send('toggle-ticket-menu', {})
+
+      ipcRenderer.on('ticket-action', (event, action) => {
+        console.log(action)
+      })
     },
     created () {
       this.loadTicket()
     },
     methods: {
+      ...ticketsActions(['fetchTicket']),
       loadTicket () {
-        console.log('load ticket', this.$route.params.id)
+        this.loading = true
+        this.fetchTicket(this.$route.params.id).then(response => {
+          this.ticket = response
+          this.loading = false
+        })
       }
     }
   }

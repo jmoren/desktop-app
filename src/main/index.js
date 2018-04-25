@@ -16,7 +16,7 @@ let menu
 
 const menuTemplate = [
   {
-    label: 'BarManager',
+    label: app.getName(),
     submenu: [
       {
         label: 'Mesas',
@@ -54,6 +54,96 @@ const menuTemplate = [
         click: () => {
           openPage('tickets')
         }
+      }
+    ]
+  },
+  {
+    label: 'Ticket',
+    id: 'ticket',
+    submenu: [
+      {
+        label: 'Cerrar',
+        id: 'ticket-close',
+        enabled: false,
+        click: () => {
+          sendTicketAction('cerrar ticket')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Imprimir',
+        id: 'ticket-print',
+        enabled: false,
+        click: () => {
+          sendTicketAction('imprimir ticket')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Imprimir Factura',
+        id: 'ticket-fiscal',
+        enabled: false,
+        click: () => {
+          sendTicketAction('imprimir ticket fiscal')
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Mesa',
+        submenu: [
+          {
+            label: 'Cambiar Mesa',
+            enabled: false,
+            id: 'ticket-table',
+            click: () => {
+              sendTicketAction('cambiar de mesa')
+            }
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Enviar como delivery',
+            enabled: false,
+            id: 'ticket-remove-table',
+            click: () => {
+              sendTicketAction('cambiar delivery')
+            }
+          }
+        ]
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Cliente',
+        submenu: [
+          {
+            label: 'Asignar cliente',
+            enabled: false,
+            id: 'ticket-client',
+            click: () => {
+              sendTicketAction('cambiar de mesa')
+            }
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Elimnar el cliente',
+            enabled: false,
+            id: 'ticket-remove-client',
+            click: () => {
+              sendTicketAction('cambiar delivery')
+            }
+          }
+        ]
       }
     ]
   },
@@ -175,6 +265,31 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+}
+
+ipcMain.on('toggle-ticket-menu', () => {
+  toggleTicketMenu()
+})
+
+function toggleTicketMenu () {
+  const items = [
+    'ticket-close',
+    'ticket-print',
+    'ticket-client',
+    'ticket-fiscal',
+    'ticket-table',
+    'ticket-remove-client',
+    'ticket-remove-table'
+  ]
+  for (var i = items.length - 1; i >= 0; i--) {
+    let id = items[i]
+    let item = menu.getMenuItemById(id)
+    item.enabled = !item.enabled
+  }
+}
+
+function sendTicketAction (action) {
+  mainWindow.webContents.send('ticket-action', action)
 }
 
 function openPage (page) {
