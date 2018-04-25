@@ -16,19 +16,22 @@
         </el-breadcrumb>
       </span>
       <div class="version">
-        <a class="update-indicator" @click="confirmUpdateModal()">
-          <span class="message-icon" :class="{'success': upToDate, 'danger': outdated, 'info': downloading }">
-            <font-awesome-icon icon="check-circle" v-if="upToDate"></font-awesome-icon>
-            <font-awesome-icon icon="exclamation-circle" pulse v-if="outdated"></font-awesome-icon>
-            <font-awesome-icon icon="sync" spin v-if="downloading"></font-awesome-icon>
-          </span>
-          <span class="message">{{ textMsg }}</span>
-        </a>
+        <span class="status">
+          <a @click="confirmUpdateModal()">
+            <span class="message-icon" :class="{'success': upToDate, 'danger': outdated, 'info': downloading }">
+              <font-awesome-icon icon="circle" v-if="upToDate"></font-awesome-icon>
+              <font-awesome-icon icon="circle" v-if="outdated"></font-awesome-icon>
+              <font-awesome-icon icon="circle" v-if="downloading"></font-awesome-icon>
+            </span>
+            <span>{{ tooltipMessage }}</span>
+          </a>
+        </span>
+        <span class="sep"><font-awesome-icon icon="ellipsis-v"></font-awesome-icon></span>
         <span class="info">{{ name }} {{ version }} &copy; {{ new Date().getFullYear() }}</span>
       </div>
     </footer>
     <el-dialog
-      title="Tips"
+      title="Actualizacion para instalar"
       :visible.sync="confirmUpdate"
       width="30%">
       <span>Cerrar la aplicacion y actualizar?</span>
@@ -73,6 +76,17 @@
         let paths = this.$route.path.split('/')
         paths.shift()
         return paths
+      },
+      tooltipMessage () {
+        if (this.upToDate) {
+          return 'No hay actualizaciones'
+        } else if (this.outdated) {
+          return 'Nueva actualizacion'
+        } else if (this.downloading) {
+          return 'Bajando Actualizacion'
+        } else {
+          return ''
+        }
       }
     },
     created () {
@@ -141,13 +155,15 @@
     width: 100%;
     z-index: 100001;
   }
-  footer .version { float: right; margin-right: 20px;}
+  
   footer .path .el-breadcrumb { float: left; line-height: 30px; margin: 0px 5px 0px 10px; font-size: 12px;} 
   footer .path .el-breadcrumb a, 
   footer .path .el-breadcrumb .el-breadcrumb__inner.is-link { color: #f1f1f1 !important; }
-  footer .update-indicator .message { margin: 0px 10px 0px 5px; }
-  footer .update-indicator .message-icon.success { color: #67C23A !important; }
-  footer .update-indicator .message-icon.danger { color: #F56C6C !important; }
-  footer .update-indicator .message-icon.info { color: #909399 !important; }
-  footer .update-indicator:hover .message { border-bottom: solid 1px #f1f1f1; cursor: pointer;}
+  
+  footer .version { float: right; margin-right: 20px;}
+  footer .sep { margin: 0px 10px; }
+  footer .status .message-icon { margin-right: 5px; }
+  footer .status .message-icon.success { color: #67C23A !important; }
+  footer .status .message-icon.danger { color: #F56C6C !important; }
+  footer .status .message-icon.info { color: #909399 !important; }
 </style>

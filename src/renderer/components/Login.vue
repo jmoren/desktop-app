@@ -66,7 +66,7 @@
       },
       doLogin () {
         this.login(this.credentials).then(response => {
-          this.$router.push({ name: 'Tables' })
+          this.$router.push({ name: 'tables' })
         }).catch(error => {
           console.log(error)
         })

@@ -30,7 +30,7 @@ const menuTemplate = [
       },
       {
         label: 'Clientes',
-        accelerator: 'CmdOrCtrl+C',
+        accelerator: 'CmdOrCtrl+E',
         click: () => {
           openPage('clients')
         }

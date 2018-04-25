@@ -51,10 +51,6 @@ const routes = [
     path: '/not-found',
     name: 'NotFound',
     component: require('@/components/NotFound').default
-  },
-  {
-    path: '*',
-    redirect: '/not-found'
   }
 ]
 

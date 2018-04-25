@@ -1,6 +1,5 @@
 const getters = {
-  productList: state => state.list,
-  categoryList: state => state.categories
+  productList: state => state.list
 }
 
 export default getters
