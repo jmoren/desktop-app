@@ -1,19 +1,18 @@
 <template>
-  <div>
-    <div class="main-nav-bar">
-      <a @click="goBack()" class="go-back">
-        <font-awesome-icon icon="arrow-left"/>    
-      </a>
-      <div class="title">
-        <slot name="title">Aca va el title</slot>
-      </div>
-      <div class="sub-items">
-        <slot name="sub-items"></slot>
-      </div>
-      <div class="controls">
-        <slot name="controls">Aca van los botones</slot>
-      </div>
+  <div class="main-nav-bar">
+    <a @click="goBack()" class="go-back">
+      <font-awesome-icon icon="arrow-left"/>    
+    </a>
+    <div class="title">
+      <slot name="title">Aca va el title</slot>
     </div>
+    <div class="sub-items">
+      <slot name="sub-items"></slot>
+    </div>
+    <div class="controls">
+      <slot name="controls">Aca van los botones</slot>
+    </div>
+    <a class="menu-help"><font-awesome-icon icon="ellipsis-v"/></a>
   </div>
 </template>
 
@@ -34,13 +33,13 @@
 <style>
   .main-nav-bar {
     background: #f1f1f1;
-    padding: 10px;
+    padding: 0px 10px;
     position: fixed;
     width: 99%;
     z-index: 10000;
     margin: 0px;
-    height: 50px;
-    line-height: 50px;
+    height: 4.5em;
+    line-height: 4.5em;
     border-bottom: solid 1px #d4d4d4;
     display: flex;
     flex-wrap: wrap;
@@ -50,9 +49,9 @@
   }
   .main-nav-bar  .go-back {
     float: left;
-    width: 50px;
+    height: 4.5em;
     margin-right: 10px;
-    font-size: 25px;
+    font-size: 30px;
     text-align: center;
     cursor: pointer;
   }
@@ -60,19 +59,25 @@
   .main-nav-bar .title {
     color: #333;
     font-weight: bold;
-    font-size: 25px;
-    height: 50px;
+    font-size: 30px;
+    height: 4.5em;
     flex-grow: 1;
   }
 
   .main-nav-bar .controls {
     text-align: right;
-    height: 50px;
+    height: 4.5em;
     flex-grow: 1;
+  }
+  .main-nav-bar .menu-help {
+    float: right;
+    margin-left: 30px;
+    margin-right: 20px;
+    font-size: 30px;
   }
 
   .main-nav-bar .sub-items {
-    height: 50px;
+    height: 4.5em;
     flex-grow: 2;
   }
 </style>

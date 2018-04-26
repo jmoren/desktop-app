@@ -1,7 +1,22 @@
 <template>
-  <div v-loading="loading">
+  <div class="ticket-payments-content" v-loading="loading">
+    <div class="payments-toolbar">
+      <div class="reload-data">
+        <el-button size="mini" type="primary" @click="loadPayments()">
+          <font-awesome-icon icon="sync"></font-awesome-icon>
+          Reload
+        </el-button>
+      </div>
+      <div class="toolbar">
+        <el-button-group>
+          <el-button size="mini" type="danger">
+            <font-awesome-icon icon="trash"></font-awesome-icon>
+            Eliminar pagos
+          </el-button>
+        </el-button-group>
+      </div>
+    </div>
     <p>{{ payments }}</p>
-    <el-button type="primary" @click="loadPayments()">Reload</el-button>
   </div>
 </template>
 
@@ -39,9 +54,19 @@
 </script>
 
 <style>
-  .ticket-middle .ticket-payments {
-    border-left: solid 1px #ddd;
-    overflow: auto;
-    height: 100vh;
+  .ticket-payments-content {
+    min-height: 740px;
+  }
+  .ticket-payments .payments-toolbar {
+    height: 3em;
+    line-height: 3em;
+    border-bottom: solid 1px #eee;
+    padding: 0px;
+  }
+  .ticket-payments .payments-toolbar .reload-data {
+    float: left;
+  }
+  .ticket-payments .payments-toolbar .toolbar {
+    float: right;
   }
 </style>

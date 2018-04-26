@@ -122,29 +122,37 @@
   @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 
   html, body {
-    height: 100vh !important;
-    overflow-x: hidden;
     background: #E4E7ED;
     font-family: 'Ubuntu', sans-serif;
     padding: 0px !important;
     margin: 0px !important;
+    height: 100% !important;
+    min-height: 100% !important;
   }
 
-  .fade-leave-active {
-    opacity: 0;
+  #app {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100% !important;
+    min-height: 100% !important;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
-  .fade-enter-active {
-    transition: opacity 0.1s;
-  }
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
+  
+  /*.main-content-view,
+  .main-content-view .ticket-content,
+  .main-content-view .tables-content,
+  .main-content-view .clients-content {
+    height: 100% !important;
+    min-height: 100% !important;
+  }*/
+
   footer {
     position: absolute;
     bottom: 0px;
-    height: 4vh;
-    line-height: 4vh;
+    height: 2.3em;
+    line-height: 2.3em;
     background: #333;
     color: #fff;
     font-size: 12px;
@@ -153,7 +161,7 @@
     z-index: 100001;
   }
   
-  footer .path .el-breadcrumb { float: left; line-height: 30px; margin: 0px 5px 0px 10px; font-size: 12px;} 
+  footer .path .el-breadcrumb { float: left; line-height: 2em; margin: 0px 5px 0px 10px; font-size: 12px;} 
   footer .path .el-breadcrumb a, 
   footer .path .el-breadcrumb .el-breadcrumb__inner.is-link { color: #f1f1f1 !important; }
   

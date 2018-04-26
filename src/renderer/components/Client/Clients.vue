@@ -7,36 +7,38 @@
       </div>
     </page-header>
     <page-content>
-      <div slot="content" v-loading="loading">
-        <el-row :gutter="20">
-          <el-col :span="18">
-            <div class="clients-main">
-              <el-table :data="filteredClients" style="width: 100%">
-                <el-table-column
-                  prop="name"
-                  sortable
-                  label="Nombre Completo">
-                </el-table-column>
-                <el-table-column
-                  prop="phone"
-                  label="Telefono">
-                </el-table-column>
-                <el-table-column
-                  prop="total_debt"
-                  sortable
-                  label="Deuda Pendiente">
-                </el-table-column>
-              </el-table>
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="clients-side">
-              <el-input type="search" v-model="filter" placeholder="Filtrar clientes">
-                <i slot="prefix" class="el-input__icon el-icon-search"></i>
-              </el-input>
-            </div>
-          </el-col>
-        </el-row>
+      <div slot="content">
+        <div class="clients-content" v-loading="loading">
+          <el-row :gutter="20">
+            <el-col :span="18">
+              <div class="clients-main">
+                <el-table :data="filteredClients" style="width: 100%">
+                  <el-table-column
+                    prop="name"
+                    sortable
+                    label="Nombre Completo">
+                  </el-table-column>
+                  <el-table-column
+                    prop="phone"
+                    label="Telefono">
+                  </el-table-column>
+                  <el-table-column
+                    prop="total_debt"
+                    sortable
+                    label="Deuda Pendiente">
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="clients-side">
+                <el-input type="search" v-model="filter" placeholder="Filtrar clientes">
+                  <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                </el-input>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </page-content>
   </div>

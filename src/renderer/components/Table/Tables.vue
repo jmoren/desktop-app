@@ -13,7 +13,7 @@
     </page-header>
     <page-content>
       <div slot="content">
-        <div class="table-list" v-loading="loading">
+        <div class="tables-content" v-loading="loading">
           <el-row>
             <el-col :span="4" v-for="(table, index) in tables" :key="index" class="table">
               <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none; height: 129px;">
@@ -113,29 +113,23 @@ export default {
 </script>
 
 <style lang="css">
-  .table-list {
-    overflow: scroll;
-    height: 100vh;
-    padding: 0px;
-    margin: 0px;
-  }
-  .table-list .table .closed,
-  .table-list .table .closed a {
+  .tables-content .table .closed,
+  .tables-content .table .closed a {
     color: #C70039;
   }
 
-  .table-list .table .open,
-  .table-list .table .open a {
+  .tables-content .table .open,
+  .tables-content .table .open a {
     color: #333;
   }
 
-  .table-list .table {
+  .tables-content .table {
     text-align: left;
     min-height: 130px;
     max-height: 130px;
   }
-  .table-list .table .with-ticket a { color: #C70039; text-decoration: none;}
-  .table-list .table .name {
+  .tables-content .table .with-ticket a { color: #C70039; text-decoration: none;}
+  .tables-content .table .name {
     margin: 5px 0px;
     padding: 0px;
   }

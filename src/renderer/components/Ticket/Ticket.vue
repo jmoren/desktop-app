@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading">
+  <div v-loading="loading" class="main-content-view">
     <page-header>
       <div slot="title" >Ticket {{ ticket.number }}</div>
       <div slot="sub-items">
@@ -21,31 +21,25 @@
       </div>
     </page-header>
     <page-content>
-      <div slot="content">
-        <div class="ticket" v-loading="loading">
-          <el-row :gutter="10" class="ticket-top">
-            <el-col :span="18">
-              <div v-if="ticket.id">
-                <ticket-item-form></ticket-item-form>
-              </div>
-            </el-col>
-            <el-col :span="6">
-              <div class="ticket-total">${{ ticket.partial_total }}</div>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10" class="ticket-middle">
-            <el-col :span="18" class="ticket-rows">
-              <div v-if="ticket.id">
-                <ticket-entries></ticket-entries>
-              </div>
-            </el-col>
-            <el-col :span="6" class="ticket-payments">
-              <div v-if="ticket.id">
-                <ticket-payments></ticket-payments>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
+      <div slot="content" class="ticket-content" v-loading="loading">
+        <el-row :gutter="10" class="ticket-top">
+          <el-col :span="18">
+            <div v-if="ticket.id">
+              <ticket-item-form></ticket-item-form>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="ticket-total">${{ ticket.partial_total }}</div>
+          </el-col>
+        </el-row>
+        <el-row :gutter="10" class="ticket-middle">
+          <el-col :span="18" class="ticket-rows">
+            <ticket-entries v-if="ticket.id"></ticket-entries>
+          </el-col>
+          <el-col :span="6" class="ticket-payments">
+            <ticket-payments v-if="ticket.id"></ticket-payments>
+          </el-col>
+        </el-row>
       </div>
     </page-content>
   </div>
@@ -137,16 +131,12 @@
 </script>
 
 <style>
-  .ticket {
-    overflow: auto;
-    height: 100vh;
-  }
   .ticket-top {
-    height: 14vh;
-    line-height: 14vh;
     position: fixed;
-    top: 70px;
+    top: 4.5em;
     width: 100%;
+    height: 5em;
+    line-height: 5em;
     z-index: 999;
     background: #fff;
     padding: 0px 10px;
@@ -159,20 +149,22 @@
     font-size: 60px;
     text-align: center;
     border-left: solid 1px #ddd;
-    height: 14vh;
   }
 
   .ticket-top .ticket-form {
     text-align: left;
-    height: 14vh;
   }
 
   .ticket-middle {
-    margin-top: 14vh;
-    height: 100vh;
+    padding-top: 5em;
+    min-height: 740px;
     background: #fff;
     margin-left: 0px !important;
     margin-right: 0px !important;
+  }
+
+  .ticket-middle .ticket-payments {
+    border-left: solid 1px #ddd;
   }
 
   .ticket-information {

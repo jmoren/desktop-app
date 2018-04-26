@@ -64,11 +64,11 @@
   .client-search {
     position: absolute;
     box-shadow: 3px 3px 3px #999;
-    top: 71px;
+    top: 5em;
+    left: 0;
     z-index: 1000;
     background: #f1f1f1;
     padding: 10px;
-    left: 0;
     width: 50%;
   }
   .my-autocomplete  li {

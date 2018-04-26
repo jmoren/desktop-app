@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading">
+  <div class="ticket-rows-content" v-loading="loading">
     <div class="ticket-toolbar">
       <div class="reload-data">
         <el-button size="mini" type="primary" @click="loadEntries()">
@@ -20,82 +20,84 @@
         </el-button-group>
       </div>
     </div>
-    <el-table
-      ref="entriesTable"
-      :data="entries"
-      class="entries"
-      style="width: 100%"
-      @selection-change="handleSelectionChange">
-      <el-table-column
-        label=""
-        width="80">
-        <template slot-scope="scope">
-          <div style="text-align: center;">
-            <span :class="rowState(scope.row)">
-              <font-awesome-icon icon="circle"></font-awesome-icon>
-            </span>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        label="Tipo"
-        width="100">
-        <template slot-scope="scope">
-          {{ scope.row.type }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Producto"
-        width="400">
-        <template slot-scope="scope">
-          <el-row :gutter="5">
-            <el-col :span="4">
-              <span class="icon-round">
-                <font-awesome-icon icon="utensils"></font-awesome-icon>
-              </span>
-            </el-col>
-            <el-col :span="20">
-              <span>{{ scope.row.item.name }}</span>
-              <p style="color: #999; font-size: 12px;">{{ scope.row.comment }}</p>
-            </el-col>
-          </el-row>
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Cant">
-        <template slot-scope="scope">
-          {{ scope.row.quantity }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Precio U.">
-        <template slot-scope="scope">
-          {{ scope.row.item.price }}
-        </template>
-      </el-table-column>
-      <el-table-column
-        label="Subtotal">
-        <template slot-scope="scope">
-          {{ scope.row.subtotal }}
-        </template>
-      </el-table-column>
-      <el-table-column type="expand">
-        <template slot-scope="scope">
-          <ul>
-            <li v-for="(item, index) in scope.row.entry_items" :key="index">
-              <span :class="rowState(item)">
+    <div class="ticket-table" style="height: 100%;">
+      <el-table
+        ref="entriesTable"
+        :data="entries"
+        class="entries"
+        style="width: 100%"
+        @selection-change="handleSelectionChange">
+        <el-table-column
+          label=""
+          width="80">
+          <template slot-scope="scope">
+            <div style="text-align: center;">
+              <span :class="rowState(scope.row)">
                 <font-awesome-icon icon="circle"></font-awesome-icon>
               </span>
-              {{ item.item_name }}
-            </li>
-          </ul>
-        </template>
-      </el-table-column>
-    </el-table>    
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="Producto"
+          width="400">
+          <template slot-scope="scope">
+            <el-row :gutter="5">
+              <el-col :span="4">
+                <span class="icon-round">
+                  <font-awesome-icon icon="utensils"></font-awesome-icon>
+                </span>
+              </el-col>
+              <el-col :span="20">
+                <span>{{ scope.row.item.name }}</span>
+                <p style="color: #999; font-size: 12px;">{{ scope.row.comment }}</p>
+              </el-col>
+            </el-row>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="Tipo"
+          width="100">
+          <template slot-scope="scope">
+            {{ scope.row.type }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="Cant">
+          <template slot-scope="scope">
+            {{ scope.row.quantity }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="Precio U.">
+          <template slot-scope="scope">
+            {{ scope.row.item.price }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="Subtotal">
+          <template slot-scope="scope">
+            {{ scope.row.subtotal }}
+          </template>
+        </el-table-column>
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <ul>
+              <li v-for="(item, index) in scope.row.entry_items" :key="index">
+                <span :class="rowState(item)">
+                  <font-awesome-icon icon="circle"></font-awesome-icon>
+                </span>
+                {{ item.item_name }}
+              </li>
+            </ul>
+          </template>
+        </el-table-column>
+      </el-table>    
+    </div>
   </div>
 </template>
 
@@ -154,8 +156,8 @@
 </script>
 
 <style>
-  .ticket-middle .ticket-rows {
-    height: 100vh;
+  .ticket-rows-content {
+    min-height: 740px;
     overflow: auto;
   }
 
@@ -163,8 +165,10 @@
   .ticket-middle .ticket-rows .pending { color: #E6A23C; }
   .ticket-middle .ticket-rows .canceled { color: #F56C6C; }
   .ticket-middle .ticket-rows .ticket-toolbar {
-    margin: 20px 0px;
-    height: 30px;
+    height: 3em;
+    line-height: 3em;
+    border-bottom: solid 1px #eee;
+    padding: 0px;
   }
   .ticket-middle .ticket-rows .ticket-toolbar .reload-data {
     margin-right: 10px;
