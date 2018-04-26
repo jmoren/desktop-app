@@ -115,7 +115,7 @@ export default {
 <style lang="css">
   .table-list {
     overflow: scroll;
-    height: 850px;
+    height: 100vh;
     padding: 0px;
     margin: 0px;
   }

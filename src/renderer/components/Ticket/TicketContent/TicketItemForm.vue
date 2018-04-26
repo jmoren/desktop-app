@@ -2,16 +2,15 @@
   <div class="ticket-form">
     <el-form @keyup.enter.prevent="addEntry">
       <el-row :gutter="10">
-        <el-col :span="3">
+        <el-col :span="4">
           <el-autocomplete 
             v-model="productCode" 
             :fetch-suggestions="filterProductsByCode"
             :trigger-on-focus="false"
-            value="1"
             style="width: 100%"
             placeholder="Codigo"
             @select="setProduct">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search"></i>
             <template slot-scope="{ item }">
               <div class="item-name">{{ item.code }}</div>
               <span class="item-description">{{ item.name }}</span>
@@ -23,26 +22,27 @@
             v-model="productName"
             :fetch-suggestions="filterProductsByName"
             :trigger-on-focus="false"
-            value="test"
             style="width: 100%"
             placeholder="Seleccione Producto"
             @select="setProduct">
-            <i slot="prefix" class="el-input__icon el-icon-search"></i>
+            <i slot="suffix" class="el-input__icon el-icon-search"></i>
             <template slot-scope="{ item }">
               <div class="item-name">{{ item.name }}</div>
               <span class="item-description">{{ item.code }} - {{ item.description }}</span>
             </template>
           </el-autocomplete>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="2">
           <el-input type="number" placeholder="Cantidad" @change="updateSubTotal" v-model="item.quantity" min="1" step="1"/>
         </el-col>
         <el-col :span="6">
           <el-input type="text" placeholder="Nota o comentario" v-model="item.comment" />
         </el-col>
         <el-col :span="3">
-          <el-button>Add</el-button>
-          <el-button>Reset</el-button>
+          <el-button-group>
+            <el-button size="medium" type="primary" icon="el-icon-plus"></el-button>
+            <el-button size="medium" type="primary" icon="el-icon-delete"></el-button>
+          </el-button-group>
         </el-col>
       </el-row>
     </el-form>
@@ -78,7 +78,7 @@
         this.item.product = product
         this.item.code = product.code
         this.productName = this.item.product.name
-        this.productCode = this.item.product.code
+        this.productCode = String(this.item.product.code)
       },
       filterProductsByName (query, cb) {
         let result = this.productList.filter((product) => {
@@ -104,10 +104,13 @@
 </script>
 
 <style>
-  .ticket-form .el-autocomplete-suggestion li {
+  .ticket-top .ticket-form .el-autocomplete-suggestion li {
     line-height: 20px;
     padding: 3px 5px;
   }
+  .ticket-top .ticket-form .el-autocomplete-suggestion .el-scrollbar {
+    width: 200px !important;
+  } 
   .item-name { font-weight: bold; }
   .item-description { color: #999; font-size: 12px; }
 </style>

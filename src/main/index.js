@@ -259,6 +259,7 @@ function createWindow () {
   // Add menu
   menu = Menu.buildFromTemplate(menuTemplate)
   Menu.setApplicationMenu(menu)
+  mainWindow.setMenu(menu)
 
   mainWindow.loadURL(winURL)
 

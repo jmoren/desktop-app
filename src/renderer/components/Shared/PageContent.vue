@@ -11,7 +11,7 @@
 
 <style>
   .content {
-    padding: 71px 0px 35px 0px;
+    padding: 70px 0px 45px 0px;
     margin: 0px;
   }
 </style>

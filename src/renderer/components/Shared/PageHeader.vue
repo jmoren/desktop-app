@@ -1,15 +1,17 @@
 <template>
   <div>
     <div class="main-nav-bar">
-      <div class="clearfix">
-        <div class="go-back">
-          <a @click="goBack()">
-            <font-awesome-icon icon="arrow-left"/>    
-          </a>
-        </div>
-        <div class="title">
-          <slot name="title">Aca va el title</slot></div>
-        <div class="controls"><slot name="controls">Aca van los botones</slot></div>
+      <a @click="goBack()" class="go-back">
+        <font-awesome-icon icon="arrow-left"/>    
+      </a>
+      <div class="title">
+        <slot name="title">Aca va el title</slot>
+      </div>
+      <div class="sub-items">
+        <slot name="sub-items"></slot>
+      </div>
+      <div class="controls">
+        <slot name="controls">Aca van los botones</slot>
       </div>
     </div>
   </div>
@@ -40,25 +42,37 @@
     height: 50px;
     line-height: 50px;
     border-bottom: solid 1px #d4d4d4;
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    justify-content: space-between;
+    align-items: stretch;
   }
-  .main-nav-bar .go-back {
+  .main-nav-bar  .go-back {
     float: left;
+    width: 50px;
     margin-right: 10px;
     font-size: 25px;
+    text-align: center;
+    cursor: pointer;
   }
 
-  .main-nav-bar .clearfix {
-    clear: both;
-  }
   .main-nav-bar .title {
     color: #333;
     font-weight: bold;
     font-size: 25px;
-    float: left;
+    height: 50px;
+    flex-grow: 1;
   }
 
   .main-nav-bar .controls {
-    float: right;
-    margin-right: 5px;
+    text-align: right;
+    height: 50px;
+    flex-grow: 1;
+  }
+
+  .main-nav-bar .sub-items {
+    height: 50px;
+    flex-grow: 2;
   }
 </style>

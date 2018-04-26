@@ -2,34 +2,50 @@
   <div v-loading="loading">
     <page-header>
       <div slot="title" >Ticket {{ ticket.number }}</div>
+      <div slot="sub-items">
+        <ul class="ticket-information">
+          <li :class="{'no-data': !ticketTable && !loading }">{{ ticketTable || 'Delivery' }}</li>
+          <li :class="{'no-data': !ticketClient && !loading }">{{ ticketClient || 'Sin Cliente' }}</li>
+          <li>
+            <span :class="loading ? 'no-data' : ticket.status">
+              <font-awesome-icon icon="circle"></font-awesome-icon>
+            </span>
+            {{ loading ? '----' : ticketStatus }}
+          </li>
+        </ul>
+      </div>
       <div slot="controls">
-        <el-button-group>
-          <el-button type="primary">Nuevo Pago</el-button>
-        </el-button-group>
-        <el-button type="info" :loading="loading" @click="reloadTables()">
-          <i class="el-icon-refresh"></i>
-        </el-button>
+        <a class="reload" @click="loadTicket()">
+          <font-awesome-icon icon="sync-alt"></font-awesome-icon>
+        </a>
       </div>
     </page-header>
     <page-content>
       <div slot="content">
-        <el-row :gutter="10" class="ticket-top">
-          <el-col :span="18">
-            <ticket-item-form></ticket-item-form>
-          </el-col>
-          <el-col :span="6">
-            <div class="ticket-total">${{ ticket.partial_total }}</div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10" class="ticket-middle">
-          <el-col :span="18">
-            {{ ticket }}
-            <ticket-items></ticket-items>
-          </el-col>
-          <el-col :span="6">
-            <ticket-payments></ticket-payments>
-          </el-col>
-        </el-row>
+        <div class="ticket" v-loading="loading">
+          <el-row :gutter="10" class="ticket-top">
+            <el-col :span="18">
+              <div v-if="ticket.id">
+                <ticket-item-form></ticket-item-form>
+              </div>
+            </el-col>
+            <el-col :span="6">
+              <div class="ticket-total">${{ ticket.partial_total }}</div>
+            </el-col>
+          </el-row>
+          <el-row :gutter="10" class="ticket-middle">
+            <el-col :span="18" class="ticket-rows">
+              <div v-if="ticket.id">
+                <ticket-entries></ticket-entries>
+              </div>
+            </el-col>
+            <el-col :span="6" class="ticket-payments">
+              <div v-if="ticket.id">
+                <ticket-payments></ticket-payments>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
       </div>
     </page-content>
   </div>
@@ -40,14 +56,11 @@
   import PageHeader from '@/components/Shared/PageHeader'
   import PageContent from '@/components/Shared/PageContent'
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-
   import TicketPayments from '@/components/Ticket/TicketContent/TicketPayments'
-  import TicketItems from '@/components/Ticket/TicketContent/TicketItems'
+  import TicketEntries from '@/components/Ticket/TicketContent/TicketEntries'
   import TicketItemForm from '@/components/Ticket/TicketContent/TicketItemForm'
-
   import { createNamespacedHelpers as namespace } from 'vuex'
-  const { mapActions: ticketsActions } = namespace('tickets')
-  const { mapGetters: productsGetters } = namespace('shared')
+  const { mapGetters: ticketGetters, mapActions: ticketActions } = namespace('tickets')
 
   export default {
     name: 'client',
@@ -56,21 +69,44 @@
       PageHeader,
       FontAwesomeIcon,
       TicketPayments,
-      TicketItems,
+      TicketEntries,
       TicketItemForm
     },
     data () {
       return {
-        loading: false,
-        ticket: {}
+        loading: false
       }
     },
     computed: {
-      ...productsGetters(['productList', 'categoryList'])
+      ...ticketGetters(['ticket']),
+      ticketStatus () {
+        if (this.ticket.status === 'open') {
+          return 'Abierto'
+        } else if (this.ticket.status === 'closed') {
+          return 'Cerrado'
+        } else {
+          return 'Error'
+        }
+      },
+      ticketTable () {
+        if (!this.ticket.table) {
+          return ''
+        } else {
+          return this.ticket.table.id ? this.ticket.table.description : ''
+        }
+      },
+      ticketClient () {
+        if (!this.ticket.client) {
+          return ''
+        } else {
+          return this.ticket.client.id ? this.ticket.client.name : ''
+        }
+      }
     },
     beforeDestroy () {
       ipcRenderer.send('toggle-ticket-menu', {})
       ipcRenderer.removeAllListeners('ticket-action')
+      this.unloadData()
     },
     mounted () {
       ipcRenderer.send('toggle-ticket-menu', {})
@@ -83,22 +119,31 @@
       this.loadTicket()
     },
     methods: {
-      ...ticketsActions(['fetchTicket']),
+      ...ticketActions(['fetchTicket', 'fetchTicketEntries', 'fetchTicketPayments', 'cleanStore']),
       loadTicket () {
         this.loading = true
         this.fetchTicket(this.$route.params.id).then(response => {
-          this.ticket = response
+          this.loading = false
+        }).catch(error => {
+          console.log(error)
           this.loading = false
         })
+      },
+      unloadData () {
+        this.cleanStore()
       }
     }
   }
 </script>
 
 <style>
+  .ticket {
+    overflow: auto;
+    height: 100vh;
+  }
   .ticket-top {
-    height: 100px;
-    line-height: 90px;
+    height: 14vh;
+    line-height: 14vh;
     position: fixed;
     top: 70px;
     width: 100%;
@@ -107,22 +152,58 @@
     padding: 0px 10px;
     margin-left: 0px !important;
     margin-right: 0px !important;
+    box-shadow: 0px 2px 5px #999;
   }
-  .ticket-middle {
-    height: 100vh;
-    overflow: scroll;
-    margin-top: 100px;
-    padding: 10px;
-    background: #f1f1f1;
-  }
+  
   .ticket-top .ticket-total {
     font-size: 60px;
     text-align: center;
     border-left: solid 1px #ddd;
-    height: 100px;
+    height: 14vh;
   }
+
   .ticket-top .ticket-form {
     text-align: left;
-    height: 100px;
+    height: 14vh;
   }
+
+  .ticket-middle {
+    margin-top: 14vh;
+    height: 100vh;
+    background: #fff;
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+  }
+
+  .ticket-information {
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+  }
+
+  .ticket-information li {
+    float: left;
+    border-left: solid 1px #ddd;
+    padding: 0px 20px;
+    font-size: 25px;
+  }
+
+  .ticket-information li:first-child {
+    border-left: solid 1px transparent; 
+  }
+  
+  .reload {
+    float: right;
+    width: 50px;
+    margin-right: 20px;
+    font-size: 25px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .ticket-information li.no-data { color: #999 !important; }
+  .ticket-information li.delivery { color: #F56C6C !important; }
+  .ticket-information .open { color: #67C23A !important; }
+  .ticket-information .closed { color: #F56C6C !important; }
+  .ticket-information .no-data { color: #999 !important; }
 </style>

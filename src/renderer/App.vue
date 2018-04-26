@@ -1,9 +1,7 @@
 <template>
   <div id="app">
-    <transition name="fade" mode="out-in"
-      <router-view/>
-      <client-search ref="searchForm"></client-search>
-    </transition>
+    <client-search ref="searchForm"></client-search>
+    <router-view></router-view>
     <footer>
       <span class="path">
         <el-breadcrumb separator="/">
@@ -124,8 +122,7 @@
   @import url('https://fonts.googleapis.com/css?family=Ubuntu');
 
   html, body {
-    height: 100% !important;
-    width: 100% !important;
+    height: 100vh !important;
     overflow-x: hidden;
     background: #E4E7ED;
     font-family: 'Ubuntu', sans-serif;
@@ -146,8 +143,8 @@
   footer {
     position: absolute;
     bottom: 0px;
-    height: 30px;
-    line-height: 30px;
+    height: 4vh;
+    line-height: 4vh;
     background: #333;
     color: #fff;
     font-size: 12px;
