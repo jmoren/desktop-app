@@ -33,10 +33,14 @@
     methods: {
       ...clientsActions(['searchClient']),
       open () {
-        this.isOpen = true
-        this.$nextTick(() => {
-          this.$refs.clientSearch.focus()
-        })
+        if (this.isOpen) {
+          this.close()
+        } else {
+          this.isOpen = true
+          this.$nextTick(() => {
+            this.$refs.clientSearch.focus()
+          })
+        }
       },
       close () {
         this.isOpen = false
@@ -64,12 +68,14 @@
   .client-search {
     position: absolute;
     box-shadow: 3px 3px 3px #999;
-    top: 5em;
+    top: 4.6em;
     left: 0;
     z-index: 1000;
     background: #f1f1f1;
     padding: 10px;
-    width: 50%;
+    width: 100%;
+    height: 3em;
+    line-height: 3em;
   }
   .my-autocomplete  li {
       line-height: normal;

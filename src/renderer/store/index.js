@@ -5,6 +5,7 @@ import clients from './modules/clients'
 import tables from './modules/tables'
 import tickets from './modules/tickets'
 import products from './modules/products'
+import categories from './modules/categories'
 import shared from './modules/shared'
 import ui from './modules/ui'
 import auth from './modules/auth'
@@ -18,6 +19,7 @@ export default new Vuex.Store({
     tickets,
     tables,
     products,
+    categories,
     shared,
     ui
   },

@@ -16,21 +16,19 @@
         <div class="tables-content" v-loading="loading">
           <el-row>
             <el-col :span="4" v-for="(table, index) in tables" :key="index" class="table">
-              <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none; height: 129px;">
+              <el-card shadow="never" style="border-radius: 0px;border-top: none; border-left: none; height: 135px;">
                 <div :class="table.status">
                   <el-row :gutter="5" >
-                    <el-col :span="8">
-                      <span v-if="table.current.id">
-                        <router-link :to="{ name: 'ticket', params: { id: table.current.id }}">
+                    <a @click="openTable(table)" class="table-link">  
+                      <el-col :span="8">
+                        <span v-if="table.current.id">
                           <span class="icon"><font-awesome-icon icon="utensils" size="4x"></font-awesome-icon></span>
-                        </router-link>
-                      </span>
-                      <span v-else>
-                        <a @click="openTable(table)">
+                        </span>
+                        <span v-else>
                           <span class="icon"><font-awesome-icon icon="utensils" size="4x"></font-awesome-icon></span>
-                        </a>
-                      </span>
-                    </el-col>
+                        </span>
+                      </el-col>
+                    </a>
                     <el-col :span="16" class="with-ticket" v-if="table.current.id">
                       <el-row :gutter="5">
                         <div style="font-size: 13px">
@@ -106,7 +104,11 @@ export default {
       })
     },
     openTable (table) {
-      console.log(table)
+      if (table.current.id) {
+        this.$router.push({ name: 'ticket', params: { id: table.current.id } })
+      } else {
+        console.log('Abrir mesa', table)
+      }
     }
   }
 }
@@ -122,15 +124,21 @@ export default {
   .tables-content .table .open a {
     color: #333;
   }
+  
+  .tables-content .table .open .table-link,
+  .tables-content .table .closed .table-link {
+    height: 60px;
+    line-height: 60px;
+  }
 
   .tables-content .table {
     text-align: left;
-    min-height: 130px;
-    max-height: 130px;
+    min-height: 136px;
+    max-height: 136px;
   }
   .tables-content .table .with-ticket a { color: #C70039; text-decoration: none;}
   .tables-content .table .name {
-    margin: 5px 0px;
+    margin: 0px;
     padding: 0px;
   }
 

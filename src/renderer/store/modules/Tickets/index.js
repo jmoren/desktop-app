@@ -1,6 +1,7 @@
 import getters from './getters'
 import actions from './actions'
 import * as types from '../types'
+import _ from 'lodash'
 
 const state = {
   tickets: [],
@@ -53,6 +54,15 @@ const mutations = {
       let index = state.entries.indexOf(entry)
       state.entries.splice(index, 1)
     }
+  },
+  [types.UPDATE_ENTRY_SUCCESS] (state, data) {
+    let en = state.entries.find((entry) => {
+      return entry.id === data.id
+    })
+    _.extend(en, data)
+  },
+  [types.ADD_TICKET_PAYMENT_SUCCESS] (state, data) {
+    state.payments.push(data)
   }
 }
 

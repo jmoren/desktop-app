@@ -95,6 +95,47 @@ const menuTemplate = [
         type: 'separator'
       },
       {
+        label: 'Items',
+        submenu: [
+          {
+            label: 'Agregar Item',
+            enabled: false,
+            id: 'ticket-item',
+            accelerator: 'CmdOrCtrl+I',
+            click: () => {
+              sendTicketAction('agregar item')
+            }
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Agregar Promocion',
+            enabled: false,
+            id: 'ticket-promotion',
+            accelerator: 'CmdOrCtrl+O',
+            click: () => {
+              sendTicketAction('agregar promocion')
+            }
+          },
+          {
+            type: 'separator'
+          },
+          {
+            label: 'Agregar Adicional',
+            enabled: false,
+            id: 'ticket-additional',
+            accelerator: 'CmdOrCtrl+A',
+            click: () => {
+              sendTicketAction('agregar adicional')
+            }
+          }
+        ]
+      },
+      {
+        type: 'separator'
+      },
+      {
         label: 'Mesa',
         submenu: [
           {
@@ -129,7 +170,7 @@ const menuTemplate = [
             enabled: false,
             id: 'ticket-client',
             click: () => {
-              sendTicketAction('cambiar de mesa')
+              sendTicketAction('cambiar cliente')
             }
           },
           {
@@ -140,7 +181,7 @@ const menuTemplate = [
             enabled: false,
             id: 'ticket-remove-client',
             click: () => {
-              sendTicketAction('cambiar delivery')
+              sendTicketAction('eliminar cliente')
             }
           }
         ]
@@ -280,7 +321,10 @@ function toggleTicketMenu () {
     'ticket-fiscal',
     'ticket-table',
     'ticket-remove-client',
-    'ticket-remove-table'
+    'ticket-remove-table',
+    'ticket-item',
+    'ticket-promotion',
+    'ticket-additional'
   ]
   for (var i = items.length - 1; i >= 0; i--) {
     let id = items[i]

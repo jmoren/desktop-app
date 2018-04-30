@@ -22,24 +22,50 @@
     </page-header>
     <page-content>
       <div slot="content" class="ticket-content" v-loading="loading">
-        <el-row :gutter="10" class="ticket-top">
-          <el-col :span="18">
-            <div v-if="ticket.id">
-              <ticket-item-form></ticket-item-form>
-            </div>
-          </el-col>
-          <el-col :span="6">
-            <div class="ticket-total">${{ ticket.partial_total }}</div>
-          </el-col>
-        </el-row>
-        <el-row :gutter="10" class="ticket-middle">
-          <el-col :span="18" class="ticket-rows">
-            <ticket-entries v-if="ticket.id"></ticket-entries>
-          </el-col>
-          <el-col :span="6" class="ticket-payments">
-            <ticket-payments v-if="ticket.id"></ticket-payments>
-          </el-col>
-        </el-row>
+        <div class="ticket-top">
+          <el-row :gutter="0">
+            <el-col :span="18" class="top-left">
+              <el-row :gutter="15">
+                <el-col :span="2">
+                  <el-button plain @click="toggleMode()">
+                    <span style="float: left">
+                      <font-awesome-icon :icon="isModal ? 'hand-pointer' : 'keyboard'"></font-awesome-icon>
+                    </span>
+                  </el-button>
+                </el-col>
+                <el-col :span="7">
+                  <el-button @click="openFormModal('item')" style="width: 100%" type="primary">Item</el-button>
+                </el-col>
+                <el-col :span="7">
+                  <el-button @click="openFormModal('item')" style="width: 100%" type="primary">Promocion</el-button>
+                </el-col>
+                <el-col :span="7">
+                  <el-button @click="openFormModal('item')" style="width: 100%" type="primary">Adicional</el-button>
+                </el-col>
+              </el-row>
+            </el-col>
+            <el-col :span="6" class="top-right">
+              <span class="ticket-total">{{ ticket.partial_total | currency }}</span>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="ticket-middle">
+          <el-row :gutter="0">
+            <el-col :span="showPayments ? 18 : 24" style="position: relative">
+              <ticket-entries ref="entries" :is-modal="isModal" v-if="ticket.id"></ticket-entries>
+            </el-col>
+            <el-col :span="6" :class="{'panel-open': showPayments, 'panel-closed': !showPayments}">
+              <ticket-payments ref="payments" v-if="ticket.id"></ticket-payments>
+            </el-col>
+          </el-row>
+        </div>
+        <div class="payment-button">
+          <el-button type="primary" @click="togglePanel()" 
+            :icon="showPayments ? 'el-icon-arrow-right' : 'el-icon-arrow-left'" circle></el-button>
+        </div>
+        <div class="ticket-modal-forms">
+          <modal-ticket-item-form ref="itemFormModal"></modal-ticket-item-form>
+        </div>
       </div>
     </page-content>
   </div>
@@ -52,7 +78,8 @@
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
   import TicketPayments from '@/components/Ticket/TicketContent/TicketPayments'
   import TicketEntries from '@/components/Ticket/TicketContent/TicketEntries'
-  import TicketItemForm from '@/components/Ticket/TicketContent/TicketItemForm'
+  import ModalTicketItemForm from '@/components/Ticket/TicketContent/ModalTicketItemForm'
+
   import { createNamespacedHelpers as namespace } from 'vuex'
   const { mapGetters: ticketGetters, mapActions: ticketActions } = namespace('tickets')
 
@@ -64,11 +91,13 @@
       FontAwesomeIcon,
       TicketPayments,
       TicketEntries,
-      TicketItemForm
+      ModalTicketItemForm
     },
     data () {
       return {
-        loading: false
+        loading: false,
+        showPayments: true,
+        isModal: true
       }
     },
     computed: {
@@ -123,50 +152,69 @@
           this.loading = false
         })
       },
+      togglePanel () {
+        this.showPayments = !this.showPayments
+      },
       unloadData () {
         this.cleanStore()
+      },
+      openFormModal (type) {
+        if (type === 'item') {
+          this.$refs.itemFormModal.open()
+        } else if (type === 'promocion') {
+          console.log('promo')
+        } else if (type === 'adicional') {
+          console.log('adicional')
+        }
+      },
+      toggleMode () {
+        this.isModal = !this.isModal
       }
     }
   }
 </script>
 
 <style>
+  .main-content-view, .ticket-content, .ticket-middle {
+    min-height: 100%;
+  }
+  
   .ticket-top {
     position: fixed;
     top: 4.5em;
-    width: 100%;
     height: 5em;
     line-height: 5em;
-    z-index: 999;
+    width: 100%;
     background: #fff;
-    padding: 0px 10px;
     margin-left: 0px !important;
     margin-right: 0px !important;
-    box-shadow: 0px 2px 5px #999;
+    border-bottom: solid 2px #ddd;
+  }
+  
+  .ticket-top .top-left {
+    width: 75%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .ticket-top .top-right {
+    border-left: solid 1px #ddd;
+    padding-left: 10px;
+    height: 5em;
+    width: 25%;
   }
   
   .ticket-top .ticket-total {
     font-size: 60px;
-    text-align: center;
-    border-left: solid 1px #ddd;
-  }
-
-  .ticket-top .ticket-form {
-    text-align: left;
   }
 
   .ticket-middle {
-    padding-top: 5em;
-    min-height: 740px;
+    padding: 5.1em 0em 1em;
     background: #fff;
     margin-left: 0px !important;
     margin-right: 0px !important;
   }
-
-  .ticket-middle .ticket-payments {
-    border-left: solid 1px #ddd;
-  }
-
+  
   .ticket-information {
     margin: 0px;
     padding: 0px;
@@ -184,6 +232,14 @@
     border-left: solid 1px transparent; 
   }
   
+  .panel-open { display: block; }
+  .panel-closed { display: none; }
+  .payment-button {
+    position: fixed;
+    top: 95px;
+    right: 10px;
+    text-align: center;
+  }
   .reload {
     float: right;
     width: 50px;
@@ -192,10 +248,14 @@
     text-align: center;
     cursor: pointer;
   }
-
+  
   .ticket-information li.no-data { color: #999 !important; }
   .ticket-information li.delivery { color: #F56C6C !important; }
   .ticket-information .open { color: #67C23A !important; }
   .ticket-information .closed { color: #F56C6C !important; }
   .ticket-information .no-data { color: #999 !important; }
+
+  .ticket-content .ticket-modal-forms .el-dialog__header { padding: 20px; }
+  .ticket-content .ticket-modal-forms .el-dialog__header .el-dialog__title { font-size: 40px; line-height: 50px; height: 50px; }
+  .ticket-content .ticket-modal-forms .el-dialog__header .el-dialog__headerbtn { font-size: 40px; }
 </style>

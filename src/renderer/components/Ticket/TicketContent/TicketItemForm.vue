@@ -9,6 +9,7 @@
             :trigger-on-focus="false"
             style="width: 100%"
             placeholder="Codigo"
+            type="number"
             @select="setProduct">
             <i slot="suffix" class="el-input__icon el-icon-search"></i>
             <template slot-scope="{ item }">
@@ -36,13 +37,10 @@
           <el-input type="number" placeholder="Cantidad" @change="updateSubTotal" v-model="item.quantity" min="1" step="1"/>
         </el-col>
         <el-col :span="6">
-          <el-input type="text" placeholder="Nota o comentario" v-model="item.comment" />
+          <el-input type="text" placeholder="Nota o comentario" v-model="item.comment" @blur="addEntry()" />
         </el-col>
         <el-col :span="3">
-          <el-button-group>
-            <el-button size="medium" type="primary" icon="el-icon-plus"></el-button>
-            <el-button size="medium" type="primary" icon="el-icon-delete"></el-button>
-          </el-button-group>
+          <el-button size="medium" type="primary" icon="el-icon-delete"></el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -57,6 +55,7 @@
     name: 'ticket-items-form',
     data () {
       return {
+        itemFormOpen: false,
         productCode: null,
         productName: null,
         item: {
@@ -71,6 +70,12 @@
       ...productsGetters(['productList'])
     },
     methods: {
+      open () {
+        this.itemFormOpen = true
+      },
+      close () {
+        this.itemFormOpen = false
+      },
       addEntry () {
         console.log('add entry')
       },
@@ -104,13 +109,17 @@
 </script>
 
 <style>
-  .ticket-top .ticket-form .el-autocomplete-suggestion li {
+  .ticket-form {
+    text-align: left;
+    padding-left: 10px;
+  }
+  .ticket-form .el-autocomplete-suggestion li {
     line-height: 20px;
     padding: 3px 5px;
   }
-  .ticket-top .ticket-form .el-autocomplete-suggestion .el-scrollbar {
+  .ticket-form .el-autocomplete-suggestion .el-scrollbar {
     width: 200px !important;
   } 
-  .item-name { font-weight: bold; }
-  .item-description { color: #999; font-size: 12px; }
+  .ticket-form .item-name { font-weight: bold; }
+  .ticket-form .item-description { color: #999; font-size: 12px; }
 </style>

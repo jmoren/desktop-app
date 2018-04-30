@@ -36,10 +36,9 @@
     padding: 0px 10px;
     position: fixed;
     width: 99%;
-    z-index: 10000;
     margin: 0px;
-    height: 4.5em;
-    line-height: 4.5em;
+    height: 4.45em;
+    line-height: 4.45em;
     border-bottom: solid 1px #d4d4d4;
     display: flex;
     flex-wrap: wrap;
@@ -60,13 +59,11 @@
     color: #333;
     font-weight: bold;
     font-size: 30px;
-    height: 4.5em;
     flex-grow: 1;
   }
 
   .main-nav-bar .controls {
     text-align: right;
-    height: 4.5em;
     flex-grow: 1;
   }
   .main-nav-bar .menu-help {
@@ -77,7 +74,6 @@
   }
 
   .main-nav-bar .sub-items {
-    height: 4.5em;
     flex-grow: 2;
   }
 </style>

@@ -9,6 +9,7 @@ const { mapActions: authActions } = namespace('auth')
 const { mapActions: tablesActions } = namespace('tables')
 const { mapActions: productsActions } = namespace('products')
 const { mapActions: clientsActions } = namespace('clients')
+const { mapActions: categoriesActions } = namespace('categories')
 
 export default {
   name: 'layout',
@@ -17,7 +18,8 @@ export default {
     return {
       loadTablesOk: false,
       loadClientsOk: false,
-      loadProductsOk: false
+      loadProductsOk: false,
+      loadCategoriesOk: false
     }
   },
   computed: {
@@ -33,6 +35,7 @@ export default {
     ...tablesActions(['fetchTables']),
     ...clientsActions(['fetchClients']),
     ...productsActions(['fetchProducts']),
+    ...categoriesActions(['fetchCategories']),
     doLogout () {
       this.logout().then(() => {
         this.$router.push({ name: 'Login' })
@@ -46,6 +49,11 @@ export default {
       })
       this.fetchClients().then(() => {
         this.loadClientsOk = true
+      }).catch(error => {
+        console.log(error)
+      })
+      this.fetchCategories().then(() => {
+        this.loadCategoriesOk = true
       }).catch(error => {
         console.log(error)
       })

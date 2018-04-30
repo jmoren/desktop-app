@@ -140,14 +140,14 @@
     overflow-y: auto;
   }
   
-  /*.main-content-view,
-  .main-content-view .ticket-content,
-  .main-content-view .tables-content,
-  .main-content-view .clients-content {
-    height: 100% !important;
-    min-height: 100% !important;
-  }*/
-
+  a {
+    cursor: pointer;
+  }
+  a:focus { outline: none; }
+  
+  .text-center { text-align: center; }
+  .text-left { text-align: left; }
+  .text-right { text-align: right }
   footer {
     position: absolute;
     bottom: 0px;
