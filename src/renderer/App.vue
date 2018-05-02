@@ -1,9 +1,8 @@
 <template>
   <div id="app">
-    <client-search ref="searchForm"></client-search>
     <router-view></router-view>
     <footer>
-      <span class="path">
+      <div class="path">
         <el-breadcrumb separator="/">
           <el-breadcrumb-item :to="{ name: 'tables' }">
             Inicio
@@ -12,18 +11,19 @@
             {{ path | capitalize }}
           </el-breadcrumb-item>
         </el-breadcrumb>
-      </span>
+      </div>
       <div class="version">
-        <span class="status">
-          <a @click="confirmUpdateModal()">
-            <span class="message-icon" :class="{'success': upToDate, 'danger': outdated, 'info': downloading }">
-              <font-awesome-icon icon="circle" v-if="upToDate"></font-awesome-icon>
-              <font-awesome-icon icon="circle" v-if="outdated"></font-awesome-icon>
-              <font-awesome-icon icon="circle" v-if="downloading"></font-awesome-icon>
-            </span>
-            <span>{{ tooltipMessage }}</span>
-          </a>
-        </span>
+        <el-tooltip effect="dark" placement="top" :content="tooltipMessage">
+          <span class="status">
+            <a @click="confirmUpdateModal()">
+              <span class="message-icon" :class="{'success': upToDate, 'danger': outdated, 'info': downloading }">
+                <font-awesome-icon icon="circle" v-if="upToDate"></font-awesome-icon>
+                <font-awesome-icon icon="circle" v-if="outdated"></font-awesome-icon>
+                <font-awesome-icon icon="circle" v-if="downloading"></font-awesome-icon>
+              </span>
+            </a>
+          </span>
+        </el-tooltip>
         <span class="sep"><font-awesome-icon icon="ellipsis-v"></font-awesome-icon></span>
         <span class="info">{{ name }} {{ version }} &copy; {{ new Date().getFullYear() }}</span>
       </div>
@@ -44,12 +44,11 @@
 <script>
   import { ipcRenderer } from 'electron'
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-  import ClientSearch from '@/components/Shared/ClientSearch'
   const appPackage = require('../../package.json')
 
   export default {
     name: 'barmanager',
-    components: { FontAwesomeIcon, ClientSearch },
+    components: { FontAwesomeIcon },
     data () {
       return {
         authors: appPackage.author,
@@ -99,12 +98,6 @@
       ipcRenderer.on('open-page', (event, page) => {
         this.$router.push({ name: page })
       })
-
-      ipcRenderer.on('open-search', (event) => {
-        this.$nextTick(() => {
-          this.$refs.searchForm.open()
-        })
-      })
     },
     methods: {
       confirmUpdateModal () {
@@ -142,6 +135,8 @@
   
   a {
     cursor: pointer;
+    color: #409EFF;
+    text-decoration: none;
   }
   a:focus { outline: none; }
   
@@ -151,13 +146,14 @@
   footer {
     position: absolute;
     bottom: 0px;
+    left: 60px;
+    right: 0px;
     height: 2.3em;
     line-height: 2.3em;
     background: #333;
     color: #fff;
     font-size: 12px;
     padding: 3px 5px;
-    width: 100%;
     z-index: 100001;
   }
   

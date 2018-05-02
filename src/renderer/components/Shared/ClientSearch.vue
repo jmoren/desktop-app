@@ -4,11 +4,10 @@
       style="width: 100%" 
       :fetch-suggestions="search"
       @select="gotToClient"
-      placeholder="Buscar cliente por nombre o telefono"
+      placeholder="Buscar cliente"
       v-model="criteria"
       :trigger-on-focus="false">
       <i slot="prefix" class="el-input__icon el-icon-search"></i>
-      <el-button type="primary" slot="append" icon="el-icon-error" @click="close()"></el-button>
       <template slot-scope="{ item }">
         <div class="value">{{ item.name }}</div>
         <span class="link">{{ item.phone }}</span>
@@ -26,7 +25,7 @@
     data () {
       return {
         criteria: '',
-        isOpen: false,
+        isOpen: true,
         clients: []
       }
     },
@@ -36,14 +35,12 @@
         if (this.isOpen) {
           this.close()
         } else {
-          this.isOpen = true
           this.$nextTick(() => {
             this.$refs.clientSearch.focus()
           })
         }
       },
       close () {
-        this.isOpen = false
         this.criteria = ''
       },
       search (query, cb) {
@@ -56,7 +53,6 @@
         }
       },
       gotToClient (client) {
-        this.isOpen = false
         this.criteria = ''
         this.$router.push({ name: 'client', params: { id: client.id } })
       }
@@ -66,13 +62,13 @@
 
 <style scoped>
   .client-search {
-    position: absolute;
+    /*position: absolute;
     box-shadow: 3px 3px 3px #999;
     top: 4.6em;
     left: 0;
     z-index: 1000;
     background: #f1f1f1;
-    padding: 10px;
+    padding: 10px;*/
     width: 100%;
     height: 3em;
     line-height: 3em;

@@ -4,8 +4,16 @@
       <div slot="title" >Ticket {{ ticket.number }}</div>
       <div slot="sub-items">
         <ul class="ticket-information">
-          <li :class="{'no-data': !ticketTable && !loading }">{{ ticketTable || 'Delivery' }}</li>
-          <li :class="{'no-data': !ticketClient && !loading }">{{ ticketClient || 'Sin Cliente' }}</li>
+          <el-tooltip effect="dark" content="Mesa asignada del ticket" placement="bottom">
+            <li :class="{'no-data': !ticketTable && !loading }">
+              {{ ticketTable || 'Delivery' }}
+            </li>
+          </el-tooltip>
+          <el-tooltip effect="dark" content="Cliente asignado al ticket" placement="bottom">
+            <li :class="{'no-data': !ticketClient && !loading }">
+              {{ ticketClient || 'Sin Cliente' }}
+            </li>
+          </el-tooltip>
           <li>
             <span :class="loading ? 'no-data' : ticket.status">
               <font-awesome-icon icon="circle"></font-awesome-icon>
@@ -27,20 +35,24 @@
             <el-col :span="18" class="top-left">
               <el-row :gutter="15">
                 <el-col :span="2">
-                  <el-button plain @click="toggleMode()">
-                    <span style="float: left">
-                      <font-awesome-icon :icon="isModal ? 'hand-pointer' : 'keyboard'"></font-awesome-icon>
-                    </span>
-                  </el-button>
+                  <el-tooltip effect="dark" 
+                      :content="isModal ? 'Cambiar a formulario en la pagina' : 'Cambiar a formulario fullscreen'"
+                      placement="bottom">
+                    <el-button plain @click="toggleMode()">
+                      <span style="float: left">
+                        <font-awesome-icon :icon="isModal ? 'keyboard' : 'hand-paper'"></font-awesome-icon>
+                      </span>
+                    </el-button>
+                  </el-tooltip>
                 </el-col>
                 <el-col :span="7">
                   <el-button @click="openFormModal('item')" style="width: 100%" type="primary">Item</el-button>
                 </el-col>
                 <el-col :span="7">
-                  <el-button @click="openFormModal('item')" style="width: 100%" type="primary">Promocion</el-button>
+                  <el-button @click="openFormModal('promotion')" style="width: 100%" type="primary">Promocion</el-button>
                 </el-col>
                 <el-col :span="7">
-                  <el-button @click="openFormModal('item')" style="width: 100%" type="primary">Adicional</el-button>
+                  <el-button @click="openFormModal('additional')" style="width: 100%" type="primary">Adicional</el-button>
                 </el-col>
               </el-row>
             </el-col>
@@ -64,7 +76,8 @@
             :icon="showPayments ? 'el-icon-arrow-right' : 'el-icon-arrow-left'" circle></el-button>
         </div>
         <div class="ticket-modal-forms">
-          <modal-ticket-item-form ref="itemFormModal"></modal-ticket-item-form>
+          <item-form-fullscreen ref="itemFormFullscreen"></item-form-fullscreen>
+          <promo-form-fullscreen ref="promoFormFullscreen"></promo-form-fullscreen>
         </div>
       </div>
     </page-content>
@@ -78,7 +91,8 @@
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
   import TicketPayments from '@/components/Ticket/TicketContent/TicketPayments'
   import TicketEntries from '@/components/Ticket/TicketContent/TicketEntries'
-  import ModalTicketItemForm from '@/components/Ticket/TicketContent/ModalTicketItemForm'
+  import ItemFormFullscreen from '@/components/Ticket/TicketContent/Fullscreen/TicketItemForm'
+  import PromoFormFullscreen from '@/components/Ticket/TicketContent/Fullscreen/TicketPromoForm'
 
   import { createNamespacedHelpers as namespace } from 'vuex'
   const { mapGetters: ticketGetters, mapActions: ticketActions } = namespace('tickets')
@@ -91,7 +105,8 @@
       FontAwesomeIcon,
       TicketPayments,
       TicketEntries,
-      ModalTicketItemForm
+      ItemFormFullscreen,
+      PromoFormFullscreen
     },
     data () {
       return {
@@ -159,12 +174,16 @@
         this.cleanStore()
       },
       openFormModal (type) {
-        if (type === 'item') {
-          this.$refs.itemFormModal.open()
-        } else if (type === 'promocion') {
-          console.log('promo')
-        } else if (type === 'adicional') {
-          console.log('adicional')
+        if (this.isModal) {
+          if (type === 'item') {
+            this.$refs.itemFormFullscreen.open()
+          } else if (type === 'promotion') {
+            this.$refs.promoFormFullscreen.open()
+          } else if (type === 'additional') {
+            this.$refs.entries.switchForm(type)
+          }
+        } else {
+          this.$refs.entries.switchForm(type)
         }
       },
       toggleMode () {
@@ -180,19 +199,14 @@
   }
   
   .ticket-top {
-    position: fixed;
     top: 4.5em;
     height: 5em;
     line-height: 5em;
-    width: 100%;
     background: #fff;
-    margin-left: 0px !important;
-    margin-right: 0px !important;
     border-bottom: solid 2px #ddd;
   }
   
   .ticket-top .top-left {
-    width: 75%;
     padding-left: 10px;
     padding-right: 10px;
   }
@@ -200,8 +214,6 @@
   .ticket-top .top-right {
     border-left: solid 1px #ddd;
     padding-left: 10px;
-    height: 5em;
-    width: 25%;
   }
   
   .ticket-top .ticket-total {
@@ -209,10 +221,8 @@
   }
 
   .ticket-middle {
-    padding: 5.1em 0em 1em;
+    padding: 0em;
     background: #fff;
-    margin-left: 0px !important;
-    margin-right: 0px !important;
   }
   
   .ticket-information {

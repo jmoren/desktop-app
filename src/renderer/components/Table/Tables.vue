@@ -115,6 +115,7 @@ export default {
 </script>
 
 <style lang="css">
+  .tables-content { background: #fff; }
   .tables-content .table .closed,
   .tables-content .table .closed a {
     color: #C70039;

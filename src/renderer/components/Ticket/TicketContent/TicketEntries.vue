@@ -1,7 +1,11 @@
 <template>
   <div class="ticket-rows-content">
     <div class="ticket-toolbar top">
-      <div v-if="!isModal"><ticket-item-form></ticket-item-form></div>
+      <div v-if="!isModal">
+        <div v-if="currentForm === 'item'"><ticket-item-form></ticket-item-form></div>
+        <div v-if="currentForm === 'promotion'"><ticket-promotion-form></ticket-promotion-form></div>
+      </div>
+      <div v-if="currentForm === 'additional'"><ticket-additional-form></ticket-additional-form></div>
     </div>
     <div class="ticket-table" v-loading="loading">
       <el-table
@@ -9,7 +13,7 @@
         :data="entries"
         class="entries"
         style="width: 100%"
-        height="600"
+        height="585"
         @selection-change="handleSelectionChange">
         <el-table-column
           label=""
@@ -83,21 +87,23 @@
           <template slot-scope="scope">
             <ul class="item-rows">
               <li v-for="(item, index) in scope.row.entry_items" :key="index">
+                <a href="#" style="color: #F56C6C; margin-right: 10px">
+                  <font-awesome-icon icon="trash"></font-awesome-icon>
+                </a>
+                {{ item.item_name }}
                 <span :class="entryState(item)" class="row-item-icon">
                   <font-awesome-icon icon="circle"></font-awesome-icon>
                 </span>
-                {{ item.item_name }}
               </li>
             </ul>
           </template>
         </el-table-column>
       </el-table>    
     </div>
-    <div class="ticket-toolbar bottom">
+    <div class="ticket-toolbar bottom" style="background: #fbfbfb;">
       <div class="reload-data">
         <el-button size="mini" type="primary" @click="loadEntries()">
           <font-awesome-icon icon="sync"></font-awesome-icon>
-          Reload
         </el-button>
       </div>
       <div class="toolbar" v-if="multipleSelection.length > 0">
@@ -115,12 +121,16 @@
     </div>
     <div class="ticket-toolbar bottom">
       <div style="float: left">
-        <span class="icon-round"><font-awesome-icon icon="calendar"></font-awesome-icon></span>
-        {{ ticket.created_at | moment('MM/DD/YYYY HH:mm Z') }} - {{ ticket.updated_at | moment('MM/DD/YYYY HH:mm Z')}}
-      </div>
-      <div style="float: right">
-        {{ ticket.user.name }} - {{ ticket.user.role }}
-        <span class="icon-round"><font-awesome-icon icon="user"></font-awesome-icon></span>
+        <span>
+          <span class="icon-round"><font-awesome-icon icon="clock"></font-awesome-icon></span>
+          Creado el {{ ticket.created_at | moment('MM.DD.YYYY HH:mm') }} 
+        </span>
+        <span style="margin: 0px 20px;"><font-awesome-icon icon="ellipsis-v"></font-awesome-icon></span>
+        <span style="margin: 0px 20px;"><font-awesome-icon icon="ellipsis-v"></font-awesome-icon></span>
+        <span>
+          <span class="icon-round"><font-awesome-icon icon="user"></font-awesome-icon></span>
+          {{ ticket.user.name }} - {{ ticket.user.role }}
+        </span>
       </div>
     </div>
     <el-dialog 
@@ -139,7 +149,9 @@
 <script>
   import _ from 'lodash'
   import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-  import TicketItemForm from '@/components/Ticket/TicketContent/TicketItemForm'
+  import TicketItemForm from '@/components/Ticket/TicketContent/Clasico/TicketItemForm'
+  import TicketPromotionForm from '@/components/Ticket/TicketContent/Clasico/TicketPromotionForm'
+  import TicketAdditionalForm from '@/components/Ticket/TicketContent/Clasico/TicketAdditionalForm'
   import { createNamespacedHelpers as namespace } from 'vuex'
 
   const { mapGetters: ticketGetters, mapActions: ticketActions } = namespace('tickets')
@@ -147,7 +159,12 @@
 
   export default {
     name: 'ticket-items',
-    components: { FontAwesomeIcon, TicketItemForm },
+    components: {
+      FontAwesomeIcon,
+      TicketItemForm,
+      TicketPromotionForm,
+      TicketAdditionalForm
+    },
     props: {
       isModal: {
         required: true,
@@ -162,6 +179,7 @@
         loading: false,
         multipleSelection: [],
         isCommentOpen: false,
+        currentForm: 'item',
         currentRow: {}
       }
     },
@@ -231,6 +249,9 @@
         }).catch(error => {
           console.log(error)
         })
+      },
+      switchForm (type) {
+        this.currentForm = type
       }
     }
   }
@@ -238,11 +259,6 @@
 
 <style>
   .ticket-rows-content {
-    position: fixed;
-    width: inherit;
-    height: 100vh;
-    overflow: scroll;
-    left: 0;
     background: #fff;
   }
 
@@ -276,7 +292,7 @@
     border-top: solid 1px #d4d4d4;
     padding: 5.5px 10px;
     font-size: 14px;
-    background: #f1f1f1;
+    background: #fbfbfb;
   }
 
   .ticket-rows-content .ticket-toolbar.top {
@@ -290,7 +306,7 @@
     float: right;
   }
   .ticket-rows-content .ticket-toolbar .toolbar {
-    margin-left: 10px;
+    margin-left: 0px;
     float: left;
   }
   .ticket-rows-content .icon-round {

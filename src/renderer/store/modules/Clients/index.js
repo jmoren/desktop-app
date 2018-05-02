@@ -10,6 +10,9 @@ const mutations = {
   [types.LOAD_CLIENTS_SUCCESS] (state, data) {
     state.list = data.clients
   },
+  [types.ADD_CLIENT_SUCCESS] (state, data) {
+    state.list.push(data)
+  },
   [types.LOAD_CLIENTS_ERROR] (state) {
     state.list = []
   }

@@ -37,8 +37,22 @@ const fetchClients = ({ commit }) => {
   })
 }
 
+const saveClient = ({ state, commit }, client) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post('clients', { client: client })
+      .then(response => {
+        commit(types.ADD_CLIENT_SUCCESS, response.data)
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error)
+      })
+  })
+}
 export default {
   fetchClients,
   fetchClient,
-  searchClient
+  searchClient,
+  saveClient
 }

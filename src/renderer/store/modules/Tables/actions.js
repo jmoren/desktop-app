@@ -16,6 +16,35 @@ const fetchTables = ({ commit }) => {
   })
 }
 
+const saveTable = ({ state, commit }, table) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post('tables', { table: table })
+      .then(response => {
+        commit(types.ADD_TABLE_SUCCESS, response.data)
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error)
+      })
+  })
+}
+
+const openTable = ({ state, commit }, tableId) => {
+  return new Promise((resolve, reject) => {
+    axios
+      .post(`tables/${tableId}/open`)
+      .then(response => {
+        commit(types.OPEN_TABLE_SUCCESS, response.data)
+        resolve(response.data)
+      })
+      .catch(error => {
+        reject(error)
+      })
+  })
+}
 export default {
-  fetchTables
+  fetchTables,
+  saveTable,
+  openTable
 }

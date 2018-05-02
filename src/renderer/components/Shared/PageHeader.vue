@@ -1,6 +1,6 @@
 <template>
   <div class="main-nav-bar">
-    <a @click="goBack()" class="go-back">
+    <a @click="goBack()" class="go-back" style="color: #333;">
       <font-awesome-icon icon="arrow-left"/>    
     </a>
     <div class="title">
@@ -32,19 +32,20 @@
 
 <style>
   .main-nav-bar {
-    background: #f1f1f1;
+    background: #fbfbfb;
     padding: 0px 10px;
     position: fixed;
     width: 99%;
     margin: 0px;
     height: 4.45em;
     line-height: 4.45em;
-    border-bottom: solid 1px #d4d4d4;
+    border-bottom: solid 1px #ccc;
     display: flex;
     flex-wrap: wrap;
     flex-grow: 1;
     justify-content: space-between;
     align-items: stretch;
+    z-index: 9;
   }
   .main-nav-bar  .go-back {
     float: left;

@@ -28,7 +28,7 @@
           :data="payments"
           style="width: 100%"
           @selection-change="handlePayments"
-          height="600">
+          height="585">
           <el-table-column
             type="selection"
             width="55">
@@ -59,10 +59,11 @@
       </el-table>
     </div>
     <div class="payments-toolbar">
-      <div class="paid">Pagado: <span class="currency">{{ totalPaid | currency }}</span></div>
-      <div class="pending">Pendinte: <span class="currency">{{ pendingValue | currency }}</span></div>
-    </div>
-    <div class="payments-toolbar">
+      <div class="reload-data">
+        <el-button size="mini" type="primary" @click="loadPayments()">
+          <font-awesome-icon icon="sync"></font-awesome-icon>
+        </el-button>
+      </div>
       <div class="toolbar">
         <el-button-group v-if="selectedPayments.length > 0">
           <el-button size="mini" type="danger">
@@ -71,6 +72,10 @@
           </el-button>
         </el-button-group>
       </div>
+    </div>
+    <div class="payments-toolbar">
+      <div class="paid">Pagado: <span class="currency">{{ totalPaid | currency }}</span></div>
+      <div class="pending">Pendinte: <span class="currency">{{ pendingValue | currency }}</span></div>
     </div>
   </div>
 </template>
@@ -125,6 +130,7 @@
     methods: {
       ...ticketActions(['fetchTicketPayments', 'addPayment']),
       loadPayments () {
+        this.loading = true
         this.fetchTicketPayments(this.ticket.id).then(response => {
           this.loading = false
         }).catch(error => {
@@ -166,12 +172,6 @@
 
 <style>
   .ticket-payments-content {
-    position: fixed;
-    width: inherit;
-    height:100vh;
-    right: -1px;
-    overflow: scroll;
-    background: #fff;
     border-left: 1px solid #ddd;
   }
   
@@ -188,13 +188,13 @@
     line-height: 2.5em;
     border-top: solid 1px #d4d4d4;
     padding: 3px 10px;
-    background: #F1F1F1;
+    background: #fbfbfb;
   }
   .ticket-payments-content .payments-toolbar .reload-data {
-    float: left;
+    float: right;
   }
   .ticket-payments-content .payments-toolbar .toolbar {
-    float: right;
+    float: left;
   }
   .ticket-payments-content .payment-form {
     height: 3em;
