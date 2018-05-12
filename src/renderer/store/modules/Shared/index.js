@@ -1,8 +1,8 @@
-import getters from './getters'
-import actions from './actions'
+import getters from "./getters";
+import actions from "./actions";
 
-const state = {}
+const state = {};
 
-const mutations = {}
+const mutations = {};
 
-export default { state, mutations, getters, actions, namespaced: true }
+export default { state, mutations, getters, actions, namespaced: true };

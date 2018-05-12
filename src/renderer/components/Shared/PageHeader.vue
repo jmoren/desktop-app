@@ -1,6 +1,9 @@
 <template>
   <div class="main-nav-bar">
-    <a @click="goBack()" class="go-back" style="color: #333;">
+    <a 
+      class="go-back" 
+      style="color: #333;" 
+      @click="goBack()">
       <font-awesome-icon icon="arrow-left"/>    
     </a>
     <div class="title">
@@ -17,64 +20,64 @@
 </template>
 
 <script>
-  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-  
-  export default {
-    name: 'page-header',
-    components: { FontAwesomeIcon },
-    methods: {
-      goBack () {
-        this.$router.go(-1)
-      }
+import FontAwesomeIcon from "@fortawesome/vue-fontawesome";
+
+export default {
+  name: "PageHeader",
+  components: { FontAwesomeIcon },
+  methods: {
+    goBack() {
+      this.$router.go(-1);
     }
   }
+};
 </script>
 
 <style>
-  .main-nav-bar {
-    background: #fbfbfb;
-    padding: 0px 10px;
-    position: fixed;
-    width: 99%;
-    margin: 0px;
-    height: 4.45em;
-    line-height: 4.45em;
-    border-bottom: solid 1px #ccc;
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: 1;
-    justify-content: space-between;
-    align-items: stretch;
-    z-index: 9;
-  }
-  .main-nav-bar  .go-back {
-    float: left;
-    height: 4.5em;
-    margin-right: 10px;
-    font-size: 30px;
-    text-align: center;
-    cursor: pointer;
-  }
+.main-nav-bar {
+  background: #fbfbfb;
+  padding: 0px 10px;
+  position: fixed;
+  left: 70px;
+  width: 95%;
+  margin: 0px;
+  height: 4.45em;
+  line-height: 4.45em;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  justify-content: space-between;
+  align-items: stretch;
+  z-index: 9;
+}
+.main-nav-bar .go-back {
+  float: left;
+  margin-right: 10px;
+  font-size: 30px;
+  text-align: center;
+  cursor: pointer;
+}
 
-  .main-nav-bar .title {
-    color: #333;
-    font-weight: bold;
-    font-size: 30px;
-    flex-grow: 1;
-  }
+.main-nav-bar .title {
+  color: #333;
+  font-weight: bold;
+  font-size: 30px;
+  flex-grow: 1;
+}
 
-  .main-nav-bar .controls {
-    text-align: right;
-    flex-grow: 1;
-  }
-  .main-nav-bar .menu-help {
-    float: right;
-    margin-left: 30px;
-    margin-right: 20px;
-    font-size: 30px;
-  }
+.main-nav-bar .controls {
+  text-align: right;
+  flex-grow: 1;
+}
+.main-nav-bar .menu-help {
+  float: right;
+  margin-left: 30px;
+  margin-right: 20px;
+  font-size: 30px;
+}
 
-  .main-nav-bar .sub-items {
-    flex-grow: 2;
-  }
+.main-nav-bar .sub-items {
+  flex-grow: 2;
+}
 </style>

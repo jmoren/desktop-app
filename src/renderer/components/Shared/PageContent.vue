@@ -4,15 +4,15 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'page-content'
-  }
+export default {
+  name: "PageContent"
+};
 </script>
 
 <style>
-  .page-content {
-    padding: 4.5em 0em 2em 0em;
-    margin: 0px;
-    min-height: 100%;
-  }
+.page-content {
+  padding: 4.5em 0em 2em 0em;
+  margin: 0px;
+  min-height: 100%;
+}
 </style>

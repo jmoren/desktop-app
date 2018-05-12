@@ -6,70 +6,70 @@
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-electron-builder.html#auto-updating
  */
 //  import { dialog } from 'electron'
-import { autoUpdater } from 'electron-updater'
-import log from 'electron-log'
+import { autoUpdater } from "electron-updater";
+import log from "electron-log";
 
-let win
+let win;
 
-autoUpdater.logger = log
-autoUpdater.logger.transports.file.level = 'info'
+autoUpdater.logger = log;
+autoUpdater.logger.transports.file.level = "info";
 
-function sendStatusToWindow (ev, text) {
-  win.webContents.send('message', { event: ev, message: text })
+function sendStatusToWindow(ev, text) {
+  win.webContents.send("message", { event: ev, message: text });
 }
 
-autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('checking', 'Buscando actualizaciones')
-})
-autoUpdater.on('update-available', (info) => {
-  sendStatusToWindow('available', 'Version disponible')
-})
-autoUpdater.on('update-not-available', (info) => {
-  sendStatusToWindow('notAvailable', '')
-})
-autoUpdater.on('error', (err) => {
-  sendStatusToWindow('error', 'Error in auto-updater. ' + err)
-})
+autoUpdater.on("checking-for-update", () => {
+  sendStatusToWindow("checking", "Buscando actualizaciones");
+});
+autoUpdater.on("update-available", info => {
+  sendStatusToWindow("available", "Version disponible");
+});
+autoUpdater.on("update-not-available", info => {
+  sendStatusToWindow("notAvailable", "");
+});
+autoUpdater.on("error", err => {
+  sendStatusToWindow("error", "Error in auto-updater. " + err);
+});
 
-autoUpdater.on('download-progress', (progressObj) => {
-  let percent = `${Math.floor(progressObj.percent)} %`
-  let downloaded = formatSizeUnits(progressObj.transferred)
-  let total = formatSizeUnits(progressObj.total)
+autoUpdater.on("download-progress", progressObj => {
+  let percent = `${Math.floor(progressObj.percent)} %`;
+  let downloaded = formatSizeUnits(progressObj.transferred);
+  let total = formatSizeUnits(progressObj.total);
 
-  sendStatusToWindow('downloading', `${percent} (${downloaded} / ${total})`)
-})
+  sendStatusToWindow("downloading", `${percent} (${downloaded} / ${total})`);
+});
 
-autoUpdater.on('update-downloaded', (info) => {
-  sendStatusToWindow('downloaded', 'Instalar actualizacion')
-})
+autoUpdater.on("update-downloaded", info => {
+  sendStatusToWindow("downloaded", "Instalar actualizacion");
+});
 
-function confirm () {
-  autoUpdater.quitAndInstall()
+function confirm() {
+  autoUpdater.quitAndInstall();
 }
 
-function formatSizeUnits (bytes) {
+function formatSizeUnits(bytes) {
   if (bytes >= 1073741824) {
-    bytes = `${(bytes / 1073741824).toFixed(2)} GB`
+    bytes = `${(bytes / 1073741824).toFixed(2)} GB`;
   } else if (bytes >= 1048576) {
-    bytes = `${(bytes / 1048576).toFixed(2)} MB`
+    bytes = `${(bytes / 1048576).toFixed(2)} MB`;
   } else if (bytes >= 1024) {
-    bytes = `${(bytes / 1024).toFixed(2)} KB`
+    bytes = `${(bytes / 1024).toFixed(2)} KB`;
   } else if (bytes >= 1) {
-    bytes = `${bytes} B`
+    bytes = `${bytes} B`;
   }
 
-  return bytes
+  return bytes;
 }
 
-function checkForUpdates (currentWindow) {
-  win = currentWindow
-  if (process.env.NODE_ENV === 'development') {
-    sendStatusToWindow('dev', '')
+function checkForUpdates(currentWindow) {
+  win = currentWindow;
+  if (process.env.NODE_ENV === "development") {
+    sendStatusToWindow("dev", "");
   } else {
     try {
-      autoUpdater.checkForUpdatesAndNotify()
+      autoUpdater.checkForUpdatesAndNotify();
     } catch (error) {
-      log.info('error', error)
+      log.info("error", error);
     }
   }
 }
@@ -77,4 +77,4 @@ function checkForUpdates (currentWindow) {
 export default {
   checkForUpdates,
   confirm
-}
+};

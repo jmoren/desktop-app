@@ -1,187 +1,189 @@
-'use strict'
+"use strict";
 
-import { app, BrowserWindow, Menu, dialog, ipcMain } from 'electron'
-import manualUpdater from './manual_updater'
+import { app, BrowserWindow, Menu, dialog, ipcMain } from "electron";
+import manualUpdater from "./manual_updater";
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+if (process.env.NODE_ENV !== "development") {
+  global.__static = require("path")
+    .join(__dirname, "/static")
+    .replace(/\\/g, "\\\\");
 }
 
-let mainWindow
-let menu
+let mainWindow;
+let menu;
 
 const menuTemplate = [
   {
     label: app.getName(),
     submenu: [
       {
-        label: 'Mesas',
-        accelerator: 'CmdOrCtrl+M',
+        label: "Mesas",
+        accelerator: "CmdOrCtrl+M",
         click: () => {
-          openPage('tables')
+          openPage("tables");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Clientes',
-        accelerator: 'CmdOrCtrl+E',
+        label: "Clientes",
+        accelerator: "CmdOrCtrl+E",
         click: () => {
-          openPage('clients')
+          openPage("clients");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Deliveries',
-        accelerator: 'CmdOrCtrl+D',
+        label: "Deliveries",
+        accelerator: "CmdOrCtrl+D",
         click: () => {
-          openPage('deliveries')
+          openPage("deliveries");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Tickets',
-        accelerator: 'CmdOrCtrl+T',
+        label: "Tickets",
+        accelerator: "CmdOrCtrl+T",
         click: () => {
-          openPage('tickets')
+          openPage("tickets");
         }
       }
     ]
   },
   {
-    label: 'Ticket',
-    id: 'ticket',
+    label: "Ticket",
+    id: "ticket",
     submenu: [
       {
-        label: 'Cerrar',
-        id: 'ticket-close',
+        label: "Cerrar",
+        id: "ticket-close",
         enabled: false,
         click: () => {
-          sendTicketAction('cerrar ticket')
+          sendTicketAction("cerrar ticket");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Imprimir',
-        id: 'ticket-print',
+        label: "Imprimir",
+        id: "ticket-print",
         enabled: false,
         click: () => {
-          sendTicketAction('imprimir ticket')
+          sendTicketAction("imprimir ticket");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Imprimir Factura',
-        id: 'ticket-fiscal',
+        label: "Imprimir Factura",
+        id: "ticket-fiscal",
         enabled: false,
         click: () => {
-          sendTicketAction('imprimir ticket fiscal')
+          sendTicketAction("imprimir ticket fiscal");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Items',
+        label: "Items",
         submenu: [
           {
-            label: 'Agregar Item',
+            label: "Agregar Item",
             enabled: false,
-            id: 'ticket-item',
-            accelerator: 'CmdOrCtrl+I',
+            id: "ticket-item",
+            accelerator: "CmdOrCtrl+I",
             click: () => {
-              sendTicketAction('agregar item')
+              sendTicketAction("agregar item");
             }
           },
           {
-            type: 'separator'
+            type: "separator"
           },
           {
-            label: 'Agregar Promocion',
+            label: "Agregar Promocion",
             enabled: false,
-            id: 'ticket-promotion',
-            accelerator: 'CmdOrCtrl+O',
+            id: "ticket-promotion",
+            accelerator: "CmdOrCtrl+O",
             click: () => {
-              sendTicketAction('agregar promocion')
+              sendTicketAction("agregar promocion");
             }
           },
           {
-            type: 'separator'
+            type: "separator"
           },
           {
-            label: 'Agregar Adicional',
+            label: "Agregar Adicional",
             enabled: false,
-            id: 'ticket-additional',
-            accelerator: 'CmdOrCtrl+A',
+            id: "ticket-additional",
+            accelerator: "CmdOrCtrl+A",
             click: () => {
-              sendTicketAction('agregar adicional')
+              sendTicketAction("agregar adicional");
             }
           }
         ]
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Mesa',
+        label: "Mesa",
         submenu: [
           {
-            label: 'Cambiar Mesa',
+            label: "Cambiar Mesa",
             enabled: false,
-            id: 'ticket-table',
+            id: "ticket-table",
             click: () => {
-              sendTicketAction('cambiar de mesa')
+              sendTicketAction("cambiar de mesa");
             }
           },
           {
-            type: 'separator'
+            type: "separator"
           },
           {
-            label: 'Enviar como delivery',
+            label: "Enviar como delivery",
             enabled: false,
-            id: 'ticket-remove-table',
+            id: "ticket-remove-table",
             click: () => {
-              sendTicketAction('cambiar delivery')
+              sendTicketAction("cambiar delivery");
             }
           }
         ]
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Cliente',
+        label: "Cliente",
         submenu: [
           {
-            label: 'Asignar cliente',
+            label: "Asignar cliente",
             enabled: false,
-            id: 'ticket-client',
+            id: "ticket-client",
             click: () => {
-              sendTicketAction('cambiar cliente')
+              sendTicketAction("cambiar cliente");
             }
           },
           {
-            type: 'separator'
+            type: "separator"
           },
           {
-            label: 'Elimnar el cliente',
+            label: "Elimnar el cliente",
             enabled: false,
-            id: 'ticket-remove-client',
+            id: "ticket-remove-client",
             click: () => {
-              sendTicketAction('eliminar cliente')
+              sendTicketAction("eliminar cliente");
             }
           }
         ]
@@ -189,193 +191,195 @@ const menuTemplate = [
     ]
   },
   {
-    label: 'Buscar',
+    label: "Buscar",
     submenu: [
       {
-        label: 'Clientes',
-        accelerator: 'CmdOrCtrl+L',
+        label: "Clientes",
+        accelerator: "CmdOrCtrl+L",
         click: () => {
-          openPage('search')
+          openPage("search");
         }
       }
     ]
   },
   {
-    label: 'Administracion',
+    label: "Administracion",
     submenu: [
       {
-        label: 'Usuarios',
-        accelerator: 'CmdOrCtrl+U',
+        label: "Usuarios",
+        accelerator: "CmdOrCtrl+U",
         click: () => {
-          openPage('Usuarios')
+          openPage("Usuarios");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Reportes',
-        accelerator: 'CmdOrCtrl+T',
+        label: "Reportes",
+        accelerator: "CmdOrCtrl+T",
         click: () => {
-          openPage('Reportes')
+          openPage("Reportes");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Productos',
-        accelerator: 'CmdOrCtrl+P',
+        label: "Productos",
+        accelerator: "CmdOrCtrl+P",
         click: () => {
-          openPage('Productos')
+          openPage("Productos");
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Configuaracion',
-        accelerator: 'CmdOrCtrl+F',
+        label: "Configuaracion",
+        accelerator: "CmdOrCtrl+F",
         click: () => {
-          openPage('Configuracion')
+          openPage("Configuracion");
         }
       }
     ]
   },
   {
-    label: 'Info',
+    label: "Info",
     submenu: [
       {
-        label: 'About',
+        label: "About",
         click: () => {
           dialog.showMessageBox({
-            type: 'none',
-            buttons: ['Cerrar'],
-            title: 'About',
-            message: 'Bar Manager 3.0',
-            detail: 'Sistema integral para administrar tu restaurante, bar, pizzeria, etc...'
-          })
+            type: "none",
+            buttons: ["Cerrar"],
+            title: "About",
+            message: "Bar Manager 3.0",
+            detail:
+              "Sistema integral para administrar tu restaurante, bar, pizzeria, etc..."
+          });
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Actualizaciones',
+        label: "Actualizaciones",
         click: () => {
-          manualUpdater.checkForUpdates(mainWindow)
+          manualUpdater.checkForUpdates(mainWindow);
         }
       },
       {
-        type: 'separator'
+        type: "separator"
       },
       {
-        label: 'Salir',
-        role: 'quit'
+        label: "Salir",
+        role: "quit"
       }
     ]
   },
   {
-    label: 'Dev',
+    label: "Dev",
     submenu: [
       {
-        label: 'DevTools',
-        role: 'toggledevtools'
+        label: "DevTools",
+        role: "toggledevtools"
       }
     ]
   }
-]
+];
 
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:9080`
-  : `file://${__dirname}/index.html`
+const winURL =
+  process.env.NODE_ENV === "development"
+    ? `http://localhost:9080`
+    : `file://${__dirname}/index.html`;
 
-function createWindow () {
+function createWindow() {
   mainWindow = new BrowserWindow({
-    backgroundColor: '#E4E7ED',
-    width: 1024,
-    height: 800
-  })
+    backgroundColor: "#E4E7ED",
+    width: 1224,
+    height: 1024
+  });
 
   // Add menu
-  menu = Menu.buildFromTemplate(menuTemplate)
-  Menu.setApplicationMenu(menu)
-  mainWindow.setMenu(menu)
+  menu = Menu.buildFromTemplate(menuTemplate);
+  Menu.setApplicationMenu(menu);
+  mainWindow.setMenu(menu);
 
-  mainWindow.loadURL(winURL)
+  mainWindow.loadURL(winURL);
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
 }
 
-ipcMain.on('toggle-ticket-menu', () => {
-  toggleTicketMenu()
-})
+ipcMain.on("toggle-ticket-menu", () => {
+  toggleTicketMenu();
+});
 
-function toggleTicketMenu () {
+function toggleTicketMenu() {
   const items = [
-    'ticket-close',
-    'ticket-print',
-    'ticket-client',
-    'ticket-fiscal',
-    'ticket-table',
-    'ticket-remove-client',
-    'ticket-remove-table',
-    'ticket-item',
-    'ticket-promotion',
-    'ticket-additional'
-  ]
+    "ticket-close",
+    "ticket-print",
+    "ticket-client",
+    "ticket-fiscal",
+    "ticket-table",
+    "ticket-remove-client",
+    "ticket-remove-table",
+    "ticket-item",
+    "ticket-promotion",
+    "ticket-additional"
+  ];
   for (var i = items.length - 1; i >= 0; i--) {
-    let id = items[i]
-    let item = menu.getMenuItemById(id)
-    item.enabled = !item.enabled
+    let id = items[i];
+    let item = menu.getMenuItemById(id);
+    item.enabled = !item.enabled;
   }
 }
 
-function sendTicketAction (action) {
-  mainWindow.webContents.send('ticket-action', action)
+function sendTicketAction(action) {
+  mainWindow.webContents.send("ticket-action", action);
 }
 
-function openPage (page) {
-  if (page === 'search') {
-    mainWindow.webContents.send('open-search')
-  } else if (page === 'clients') {
-    mainWindow.webContents.send('open-page', page)
-  } else if (page === 'tables') {
-    mainWindow.webContents.send('open-page', page)
+function openPage(page) {
+  if (page === "search") {
+    mainWindow.webContents.send("open-search");
+  } else if (page === "clients") {
+    mainWindow.webContents.send("open-page", page);
+  } else if (page === "tables") {
+    mainWindow.webContents.send("open-page", page);
   } else {
-    console.log(`Open page: ${page}`)
+    console.log(`Open page: ${page}`);
   }
 }
 
-function startListenerUpdater () {
-  ipcMain.on('ready-to-messages', () => {
-    manualUpdater.checkForUpdates(mainWindow)
-  })
+function startListenerUpdater() {
+  ipcMain.on("ready-to-messages", () => {
+    manualUpdater.checkForUpdates(mainWindow);
+  });
 
-  ipcMain.on('install-updates', (event, args) => {
-    if (process.env.NODE_ENV === 'development') {
-      app.quit()
+  ipcMain.on("install-updates", (event, args) => {
+    if (process.env.NODE_ENV === "development") {
+      app.quit();
     } else {
-      manualUpdater.confirm()
+      manualUpdater.confirm();
     }
-  })
+  });
 }
 
-app.on('ready', () => {
-  startListenerUpdater()
-  createWindow()
-})
+app.on("ready", () => {
+  startListenerUpdater();
+  createWindow();
+});
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
-})
+});
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
-})
+});

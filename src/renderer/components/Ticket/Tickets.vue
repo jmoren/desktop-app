@@ -8,7 +8,10 @@
           <el-button type="primary">Cerrar</el-button>
           <el-button type="primary">Cancelar</el-button>
         </el-button-group>
-        <el-button type="info" :loading="loading" @click="loadTickets()">
+        <el-button 
+          :loading="loading" 
+          type="info" 
+          @click="loadTickets()">
           <i class="el-icon-refresh"></i>
         </el-button>
       </div>
@@ -22,34 +25,33 @@
 </template>
 
 <script>
-  import PageHeader from '@/components/Shared/PageHeader'
-  import PageContent from '@/components/Shared/PageContent'
-  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-  
-  export default {
-    name: 'client',
-    components: {
-      PageContent,
-      PageHeader,
-      FontAwesomeIcon
-    },
-    data () {
-      return {
-        loading: false,
-        tickets: {}
-      }
-    },
-    created () {
-      this.loadTickets()
-    },
-    methods: {
-      loadTickets () {
-        console.log('load tickets')
-      }
+import PageHeader from "@/components/Shared/PageHeader";
+import PageContent from "@/components/Shared/PageContent";
+import FontAwesomeIcon from "@fortawesome/vue-fontawesome";
+
+export default {
+  name: "Client",
+  components: {
+    PageContent,
+    PageHeader,
+    FontAwesomeIcon
+  },
+  data() {
+    return {
+      loading: false,
+      tickets: {}
+    };
+  },
+  created() {
+    this.loadTickets();
+  },
+  methods: {
+    loadTickets() {
+      console.log("load tickets");
     }
   }
+};
 </script>
 
 <style>
-  
 </style>
